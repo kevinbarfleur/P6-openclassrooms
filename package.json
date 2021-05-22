@@ -1,0 +1,14 @@
+{
+  "name": "tile-based-game",
+  "version": "0.0.0",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "serve": "vite preview"
+  },
+  "dependencies": {
+    "prettier": "^2.3.0",
+    "standard": "^16.0.3",
+    "vite": "^2.3.3"
+  }
+}
