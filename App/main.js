@@ -1,7 +1,7 @@
 import './styles/style.scss'
 
 import SpriteSheet from './SpriteSheet'
-import MoveTile from './MoveTile'
+import Character from './Character'
 import { loadImage } from './utils/loaders'
 import { tiles, charactersSprites } from './levels/definitions'
 
@@ -35,6 +35,19 @@ function generateLevel(x, y) {
     for (let i = 0; i <= x; i++) {
         for (let j = 0; j <= y; j++) {
             let tile
+
+            // const item = {
+            //     i,
+            //     j
+            // }
+
+            // switch (item) {
+            //     case value:
+            //         break
+
+            //     default:
+            //         break
+            // }
 
             if (i === 0 && j === 0) {
                 tile = 'cornerTopLeft_1'
@@ -80,150 +93,10 @@ function generateLevel(x, y) {
     return board
 }
 
-function drawCharacter(name, frames, context, sprites) {
-    for (let i = 0; i < frames; i++) {
-        setTimeout(() => {
-            drawBoard(currentLevel, sprites, context)
-            sprites.draw(
-                `${name + (i + 1)}`,
-                context,
-                players['1'].x,
-                players['1'].y
-            )
-
-            drawMoveOptions(context)
-
-            if (i === frames - 1)
-                drawCharacter(
-                    'elf',
-                    frames,
-                    context,
-                    sprites,
-                    players['1'].x,
-                    players['1'].y
-                )
-        }, fps * i)
-    }
-}
-
-function drawMoveOptions(context) {
-    getMoveOptions(context)
-    for (let option of moveOptionsTiles) {
-        option.draw(context, mousePos.x, mousePos.y)
-    }
-}
-
-function getMoveOptions(context) {
-    const playerX = players['1'].x / unit
-    const playerY = players['1'].y / unit
-
-    players['1'].moves = {
-        top1:
-            playerY > 1 && currentLevel[playerX][playerY - 1].includes('ground')
-                ? {
-                      x: playerX,
-                      y: playerY - 1
-                  }
-                : false,
-        top2:
-            playerY > 2 && currentLevel[playerX][playerY - 2].includes('ground')
-                ? {
-                      x: playerX,
-                      y: playerY - 2
-                  }
-                : false,
-        top3:
-            playerY > 3 && currentLevel[playerX][playerY - 3].includes('ground')
-                ? {
-                      x: playerX,
-                      y: playerY - 3
-                  }
-                : false,
-        bottom1:
-            playerY < boardDimensions.y &&
-            currentLevel[playerX][playerY + 1].includes('ground')
-                ? {
-                      x: playerX,
-                      y: playerY + 1
-                  }
-                : false,
-        bottom2:
-            playerY < boardDimensions.y - 1 &&
-            currentLevel[playerX][playerY + 2].includes('ground')
-                ? {
-                      x: playerX,
-                      y: playerY + 2
-                  }
-                : false,
-        bottom3:
-            playerY < boardDimensions.y - 2 &&
-            currentLevel[playerX][playerY + 3].includes('ground')
-                ? {
-                      x: playerX,
-                      y: playerY + 3
-                  }
-                : false,
-        left1:
-            playerX > 1 && currentLevel[playerX - 1][playerY].includes('ground')
-                ? {
-                      x: playerX - 1,
-                      y: playerY
-                  }
-                : false,
-        left2:
-            playerX > 2 && currentLevel[playerX - 2][playerY].includes('ground')
-                ? {
-                      x: playerX - 2,
-                      y: playerY
-                  }
-                : false,
-        left3:
-            playerX > 3 && currentLevel[playerX - 3][playerY].includes('ground')
-                ? {
-                      x: playerX - 3,
-                      y: playerY
-                  }
-                : false,
-        right1:
-            playerX < boardDimensions.x &&
-            currentLevel[playerX + 1][playerY].includes('ground')
-                ? {
-                      x: playerX + 1,
-                      y: playerY
-                  }
-                : false,
-        right2:
-            playerX < boardDimensions.x - 1 &&
-            currentLevel[playerX + 2][playerY].includes('ground')
-                ? {
-                      x: playerX + 2,
-                      y: playerY
-                  }
-                : false,
-        right3:
-            playerX < boardDimensions.x - 2 &&
-            currentLevel[playerX + 3][playerY].includes('ground')
-                ? {
-                      x: playerX + 3,
-                      y: playerY
-                  }
-                : false
-    }
-
-    moveOptionsTiles = []
-    const options = players['1'].moves
-    Object.keys(options).forEach((pos) => {
-        if (options[pos] !== false) {
-            moveOptionsTiles.push(
-                new MoveTile(
-                    options[pos].x,
-                    options[pos].y,
-                    unit,
-                    'rgba(255,255,255,0.2)'
-                )
-            )
-        }
-    })
+function getSpritesKeys(sprites, keyword) {
+    return Array.from(sprites.tiles.keys()).filter((key) =>
+        key.includes(keyword)
+    )
 }
 
 const canvas = document.getElementById('game')
@@ -231,17 +104,9 @@ const context = canvas.getContext('2d')
 
 const fps = 200
 const unit = 16
-let moveOptionsTiles = []
 let boardDimensions = {
     x: 12,
     y: 12
-}
-let players = {
-    1: {
-        x: 3 * unit,
-        y: 3 * unit,
-        moves: {}
-    }
 }
 let mousePos = {
     x: 0,
@@ -249,53 +114,6 @@ let mousePos = {
 }
 
 let currentLevel = generateLevel(boardDimensions.x, boardDimensions.y)
-
-canvas.addEventListener('click', (e) => {
-    const rect = canvas.getBoundingClientRect()
-    mousePos = {
-        x: e.clientX - rect.left,
-        y: e.clientY - rect.top
-    }
-
-    for (let option of moveOptionsTiles) {
-        if (option.getOptionsClicked(mousePos.x, mousePos.y)) {
-            players['1'].x =
-                option.getOptionsClicked(mousePos.x, mousePos.y).x * unit
-            players['1'].y =
-                option.getOptionsClicked(mousePos.x, mousePos.y).y * unit
-        }
-    }
-})
-
-canvas.addEventListener('mousemove', (e) => {
-    const rect = canvas.getBoundingClientRect()
-    mousePos = {
-        x: e.clientX - rect.left,
-        y: e.clientY - rect.top
-    }
-})
-
-document.addEventListener('keyup', (e) => {
-    const playerX = players['1'].x / unit
-    const playerY = players['1'].y / unit
-
-    switch (e.key) {
-        case 'ArrowUp':
-            if (playerY > 2) players['1'].y -= 1 * unit
-            break
-        case 'ArrowDown':
-            if (playerY < boardDimensions.y - 2) players['1'].y += 1 * unit
-            break
-        case 'ArrowLeft':
-            if (playerX > 1) players['1'].x -= 1 * unit
-            break
-        case 'ArrowRight':
-            if (playerX < boardDimensions.x - 1) players['1'].x += 1 * unit
-            break
-        default:
-            break
-    }
-})
 
 loadImage('App/assets/tileset.png').then((image) => {
     const sprites = new SpriteSheet(image, unit, unit)
@@ -316,6 +134,44 @@ loadImage('App/assets/tileset.png').then((image) => {
         })
     }
 
-    drawBoard(currentLevel, sprites, context)
-    drawCharacter('elf', 7, context, sprites, players['1'].x, players['1'].y)
+    const char1 = new Character(
+        'elf',
+        10,
+        [],
+        3 * unit,
+        3 * unit,
+        getSpritesKeys(sprites, 'elf'),
+        { drawBoard, fps, currentLevel, boardDimensions, unit, mousePos }
+    )
+    char1.draw(context, sprites, mousePos)
+
+    canvas.addEventListener('mousemove', (e) => {
+        const rect = canvas.getBoundingClientRect()
+        mousePos = {
+            x: e.clientX - rect.left,
+            y: e.clientY - rect.top
+        }
+
+        if (char1) {
+            char1.setMousePos(mousePos)
+        }
+    })
+
+    canvas.addEventListener('click', (e) => {
+        const rect = canvas.getBoundingClientRect()
+        mousePos = {
+            x: e.clientX - rect.left,
+            y: e.clientY - rect.top
+        }
+
+        if (char1) {
+            char1.setMousePos(mousePos)
+            for (let option in char1.getMoveOptions()) {
+                let ite = char1.getMoveOptions()[option]
+
+                if (char1.getClicked(ite.x, ite.y))
+                    char1.setPos({ x: ite.x * unit, y: ite.y * unit })
+            }
+        }
+    })
 })
