@@ -1,8 +1,9 @@
 export default class SpriteSheet {
-    constructor(image, width, height) {
+    constructor(image, width, height, unit) {
         this.image = image
-        this.width = width
-        this.height = height
+        this.width = width / 2
+        this.height = height / 2
+        this.unit = unit
         this.tiles = new Map()
     }
 
@@ -38,7 +39,7 @@ export default class SpriteSheet {
 
     draw(name, context, x, y) {
         const buffer = this.tiles.get(name)
-        context.drawImage(buffer, x, y)
+        context.drawImage(buffer, x, y, this.unit, this.unit)
     }
 
     drawTile(name, context, x, y) {

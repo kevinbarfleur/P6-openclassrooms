@@ -123,9 +123,36 @@ export const tiles = {
         x: 3,
         y: 10
     },
-    pikeBig: {
+    pike1: {
         x: 4,
         y: 11
+    },
+    pike2: {
+        x: 3,
+        y: 11
+    },
+    hole: {
+        x: 6,
+        y: 9
+    }
+}
+
+export const moveTileSprites = {
+    playerOneInitial: {
+        x: 1,
+        y: 12
+    },
+    playerOneHover: {
+        x: 2,
+        y: 12
+    },
+    playerTwoInitial: {
+        x: 3,
+        y: 12
+    },
+    playerTwoHover: {
+        x: 4,
+        y: 12
     }
 }
 
@@ -142,22 +169,52 @@ export const charactersSprites = {
         frame3: {
             x: 10,
             y: 1
-        },
-        frame4: {
-            x: 11,
-            y: 1
-        },
-        frame5: {
-            x: 12,
-            y: 1
-        },
-        frame6: {
-            x: 13,
-            y: 1
-        },
-        frame7: {
-            x: 14,
-            y: 1
         }
+        // frame4: {
+        //     x: 11,
+        //     y: 1
+        // },
+        // frame5: {
+        //     x: 12,
+        //     y: 1
+        // },
+        // frame6: {
+        //     x: 13,
+        //     y: 1
+        // },
+        // frame7: {
+        //     x: 14,
+        //     y: 1
+        // }
+    },
+    wizard: {
+        frame1: {
+            x: 8,
+            y: 11
+        },
+        frame2: {
+            x: 9,
+            y: 11
+        },
+        frame3: {
+            x: 10,
+            y: 11
+        }
+        // frame4: {
+        //     x: 11,
+        //     y: 11
+        // },
+        // frame5: {
+        //     x: 12,
+        //     y: 11
+        // },
+        // frame6: {
+        //     x: 13,
+        //     y: 11
+        // },
+        // frame7: {
+        //     x: 14,
+        //     y: 11
+        // }
     }
 }

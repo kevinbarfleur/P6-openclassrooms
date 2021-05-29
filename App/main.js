@@ -1,122 +1,79 @@
 import './styles/style.scss'
+import tileset from './assets/tileset.png'
 
 import SpriteSheet from './SpriteSheet'
 import Character from './Character'
+import Board from './Board'
 import { loadImage } from './utils/loaders'
-import { tiles, charactersSprites } from './levels/definitions'
-
-function getRandomInt(min, max) {
-    min = Math.ceil(min)
-    max = Math.floor(max)
-    return Math.floor(Math.random() * (max - min)) + min
-}
-
-function drawBoard(currentLevel, sprites, context) {
-    for (let i = 0; i <= currentLevel.length; i++) {
-        for (let j = 0; j < currentLevel.length; j++) {
-            if (currentLevel[j][i]) {
-                if (j !== 0) sprites.drawTile('ground1', context, i, j)
-                sprites.drawTile(currentLevel[i][j], context, i, j)
-            }
-        }
-    }
-}
-
-function generateLevel(x, y) {
-    let board = new Array(2)
-
-    for (let i = 0; i <= x; i++) {
-        board[i] = new Array(1)
-        for (let j = 0; j <= y; j++) {
-            board[j] = new Array(y)
-        }
-    }
-
-    for (let i = 0; i <= x; i++) {
-        for (let j = 0; j <= y; j++) {
-            let tile
-
-            // const item = {
-            //     i,
-            //     j
-            // }
-
-            // switch (item) {
-            //     case value:
-            //         break
-
-            //     default:
-            //         break
-            // }
-
-            if (i === 0 && j === 0) {
-                tile = 'cornerTopLeft_1'
-            } else if (i === x && j === 0) {
-                tile = 'cornerTopRight_1'
-            } else if (i !== 0 && i !== x && j === 0) {
-                tile = `wall2_top`
-            } else if (i !== 0 && i !== x && j === 1) {
-                tile = `wall${getRandomInt(2, 5)}_bottom`
-            } else if (i === 0 && j === 1) {
-                tile = 'cornerTopLeft_2'
-            } else if (i === x && j === 1) {
-                tile = 'cornerTopRight_2'
-            } else if (i === 0 && j === y - 1) {
-                tile = 'cornerBottomLeft_1'
-            } else if (i === 0 && j === y) {
-                tile = 'cornerBottomLeft_2'
-            } else if (i === x && j === y - 1) {
-                tile = 'cornerBottomRight_1'
-            } else if (i === x && j === y) {
-                tile = 'cornerBottomRight_2'
-            } else if (j === y - 1) {
-                tile = `wall2_top`
-            } else if (j === y) {
-                tile = `wall${getRandomInt(2, 5)}_bottom`
-            } else if (i === 0) {
-                tile = 'verticalLeft'
-            } else if (i === x) {
-                tile = 'verticalRight'
-            } else {
-                const rand = getRandomInt(1, 10)
-                if (rand <= 1) {
-                    tile = `pikeBig`
-                } else {
-                    tile = `ground${getRandomInt(1, 9)}`
-                }
-            }
-
-            board[i][j] = tile
-        }
-    }
-
-    return board
-}
-
-function getSpritesKeys(sprites, keyword) {
-    return Array.from(sprites.tiles.keys()).filter((key) =>
-        key.includes(keyword)
-    )
-}
+import { getSpritesKeys } from './utils/utils'
+import { tiles, charactersSprites, moveTileSprites } from './levels/definitions'
 
 const canvas = document.getElementById('game')
 const context = canvas.getContext('2d')
-
 const fps = 200
-const unit = 16
-let boardDimensions = {
-    x: 12,
-    y: 12
-}
+const unit = 32
 let mousePos = {
     x: 0,
     y: 0
 }
+let playersInstances = []
+let currentPlayer = 1
+const board = new Board({ x: 12, y: 12 })
+const currentLevel = board.getCurrentLevel()
+const boardDimensions = board.getDimensions()
+resizeCanvas(boardDimensions)
 
-let currentLevel = generateLevel(boardDimensions.x, boardDimensions.y)
+function getGlobal() {
+    return {
+        board,
+        fps,
+        currentLevel,
+        boardDimensions,
+        unit,
+        mousePos,
+        currentPlayer,
+        playersInstances
+    }
+}
 
-loadImage('App/assets/tileset.png').then((image) => {
-    const sprites = new SpriteSheet(image, unit, unit)
+function resizeCanvas(boardDimensions) {
+    canvas.width = boardDimensions.x * unit + unit
+    canvas.height = boardDimensions.y * unit + unit
+}
+
+function initPlayers(playersClasses, sprites) {
+    const players = []
+
+    playersClasses.forEach((player, index) => {
+        players.push(
+            new Character(
+                index + 1,
+                player.classe,
+                10,
+                [],
+                player.x * unit,
+                player.y * unit,
+                getSpritesKeys(sprites, player.classe),
+                getGlobal()
+            )
+        )
+    })
+
+    return players
+}
+
+function render(characters, context, sprites) {
+    board.draw(currentLevel, sprites, context)
+    for (let char of characters) {
+        char.draw(context, sprites)
+        char.setGlobal(getGlobal())
+    }
+
+    requestAnimationFrame(() => render(characters, context, sprites))
+}
+
+loadImage(tileset).then((image) => {
+    const sprites = new SpriteSheet(image, unit, unit, unit)
 
     // Define all level tiles
     for (let tile in tiles) {
@@ -134,16 +91,17 @@ loadImage('App/assets/tileset.png').then((image) => {
         })
     }
 
-    const char1 = new Character(
-        'elf',
-        10,
-        [],
-        3 * unit,
-        3 * unit,
-        getSpritesKeys(sprites, 'elf'),
-        { drawBoard, fps, currentLevel, boardDimensions, unit, mousePos }
+    for (let tile in moveTileSprites) {
+        sprites.define(tile, moveTileSprites[tile].x, moveTileSprites[tile].y)
+    }
+
+    playersInstances = initPlayers(
+        [
+            { classe: 'elf', x: 3, y: 3 },
+            { classe: 'wizard', x: 3, y: 7 }
+        ],
+        sprites
     )
-    char1.draw(context, sprites, mousePos)
 
     canvas.addEventListener('mousemove', (e) => {
         const rect = canvas.getBoundingClientRect()
@@ -152,8 +110,8 @@ loadImage('App/assets/tileset.png').then((image) => {
             y: e.clientY - rect.top
         }
 
-        if (char1) {
-            char1.setMousePos(mousePos)
+        for (let char of playersInstances) {
+            char.setMousePos(mousePos)
         }
     })
 
@@ -164,14 +122,24 @@ loadImage('App/assets/tileset.png').then((image) => {
             y: e.clientY - rect.top
         }
 
-        if (char1) {
-            char1.setMousePos(mousePos)
-            for (let option in char1.getMoveOptions()) {
-                let ite = char1.getMoveOptions()[option]
-
-                if (char1.getClicked(ite.x, ite.y))
-                    char1.setPos({ x: ite.x * unit, y: ite.y * unit })
+        for (let char of playersInstances) {
+            if (char) {
+                char.setMousePos(mousePos)
+                for (let option in char.getMoveOptions()) {
+                    let ite = char.getMoveOptions()[option]
+                    if (char.getClicked(ite.x, ite.y)) {
+                        char.setPos({ x: ite.x * unit, y: ite.y * unit })
+                        if (currentPlayer === playersInstances.length) {
+                            currentPlayer = 1
+                        } else {
+                            currentPlayer += 1
+                        }
+                        char.setGlobal(getGlobal())
+                    }
+                }
             }
         }
     })
+
+    render(playersInstances, context, sprites)
 })

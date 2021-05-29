@@ -1,63 +1,75 @@
-let count = 0
+import { getRandomInt } from './utils/utils'
 
 export default class Character {
-    constructor(classe, hp, inventory, posX, posY, frames, global) {
+    constructor(player, classe, hp, inventory, posX, posY, frames, global) {
+        this.player = player
         this.classe = classe
         this.hp = hp
         this.inventory = inventory
         this.pos = { x: posX, y: posY }
         this.frames = frames
+        this.frameIndex = 1
         this.moves = {}
         this.global = global
+
+        this.formatFrames()
     }
 
     draw(context, sprites) {
-        for (let i = 0; i < this.frames.length; i++) {
-            setTimeout(() => {
-                this.global.drawBoard(
-                    this.global.currentLevel,
-                    sprites,
-                    context
-                )
-                sprites.draw(
-                    `${this.classe + (i + 1)}`,
-                    context,
-                    this.pos.x,
-                    this.pos.y
-                )
-                console.log(count)
-                count += 1
-                this.drawMoveOptions(context)
-                if (i === this.frames.length - 1) {
-                    i = 0
-                    this.draw(context, sprites)
-                }
-            }, this.global.fps * i)
+        sprites.draw(
+            this.frames[this.frameIndex],
+            context,
+            this.pos.x,
+            this.pos.y
+        )
+        if (this.player === this.global.currentPlayer)
+            this.drawMoveOptions(context, sprites)
+
+        this.setFrameIndex(this.frameIndex + 1)
+        if (this.frameIndex === this.frames.length - 1) {
+            this.setFrameIndex(1)
         }
     }
 
-    drawMoveOptions(context) {
+    drawMoveOptions(context, sprites) {
         for (let moveTile in this.getMoveOptions()) {
             const tile = this.getMoveOptions()[moveTile]
 
             if (tile) {
-                context.beginPath()
-                context.fillStyle = this.isHover(
-                    tile.x,
-                    tile.y,
-                    this.global.mousePos
-                )
-                    ? 'rgba(255, 255, 255, 0.8)'
-                    : 'rgba(255, 255, 255, 0.2)'
-                context.fillRect(
-                    tile.x * this.global.unit,
-                    tile.y * this.global.unit,
-                    this.global.unit,
-                    this.global.unit
-                )
-                context.stroke()
+                if (this.isHover(tile.x, tile.y, this.global.mousePos)) {
+                    sprites.drawTile(
+                        this.global.currentPlayer === 2
+                            ? 'playerOneHover'
+                            : 'playerTwoHover',
+                        context,
+                        tile.x * 2,
+                        tile.y * 2
+                    )
+                } else {
+                    sprites.drawTile(
+                        this.global.currentPlayer === 2
+                            ? 'playerOneInitial'
+                            : 'playerTwoInitial',
+                        context,
+                        tile.x * 2,
+                        tile.y * 2
+                    )
+                }
             }
         }
+    }
+
+    formatFrames() {
+        const frames = []
+        const repeat = Math.round(this.global.fps / this.frames.length) / 9
+
+        for (let i = 0; i < this.frames.length; i++) {
+            for (let j = 0; j < repeat; j++) {
+                frames.push(this.frames[i])
+            }
+        }
+
+        this.setFrames(frames)
     }
 
     getMoveOptions() {
@@ -67,7 +79,9 @@ export default class Character {
         const boardDimensions = this.global.boardDimensions
 
         const top1 =
-            playerY > 1 && currentLevel[playerX][playerY - 1].includes('ground')
+            playerY > 1 &&
+            currentLevel[playerX][playerY - 1].includes('ground') &&
+            !this.isPlayerHere(playerX, playerY - 1)
                 ? {
                       x: playerX,
                       y: playerY - 1
@@ -76,7 +90,8 @@ export default class Character {
         const top2 =
             playerY > 2 &&
             currentLevel[playerX][playerY - 2].includes('ground') &&
-            top1
+            top1 &&
+            !this.isPlayerHere(playerX, playerY - 2)
                 ? {
                       x: playerX,
                       y: playerY - 2
@@ -86,7 +101,8 @@ export default class Character {
             playerY > 3 &&
             currentLevel[playerX][playerY - 3].includes('ground') &&
             top1 &&
-            top2
+            top2 &&
+            !this.isPlayerHere(playerX, playerY - 3)
                 ? {
                       x: playerX,
                       y: playerY - 3
@@ -94,7 +110,8 @@ export default class Character {
                 : false
         const bottom1 =
             playerY < boardDimensions.y &&
-            currentLevel[playerX][playerY + 1].includes('ground')
+            currentLevel[playerX][playerY + 1].includes('ground') &&
+            !this.isPlayerHere(playerX, playerY + 1)
                 ? {
                       x: playerX,
                       y: playerY + 1
@@ -103,7 +120,8 @@ export default class Character {
         const bottom2 =
             playerY < boardDimensions.y - 1 &&
             currentLevel[playerX][playerY + 2].includes('ground') &&
-            bottom1
+            bottom1 &&
+            !this.isPlayerHere(playerX, playerY + 2)
                 ? {
                       x: playerX,
                       y: playerY + 2
@@ -113,14 +131,17 @@ export default class Character {
             playerY < boardDimensions.y - 2 &&
             currentLevel[playerX][playerY + 3].includes('ground') &&
             bottom1 &&
-            bottom2
+            bottom2 &&
+            !this.isPlayerHere(playerX, playerY + 3)
                 ? {
                       x: playerX,
                       y: playerY + 3
                   }
                 : false
         const left1 =
-            playerX > 1 && currentLevel[playerX - 1][playerY].includes('ground')
+            playerX > 1 &&
+            currentLevel[playerX - 1][playerY].includes('ground') &&
+            !this.isPlayerHere(playerX - 1, playerY)
                 ? {
                       x: playerX - 1,
                       y: playerY
@@ -129,7 +150,8 @@ export default class Character {
         const left2 =
             playerX > 2 &&
             currentLevel[playerX - 2][playerY].includes('ground') &&
-            left1
+            left1 &&
+            !this.isPlayerHere(playerX - 2, playerY)
                 ? {
                       x: playerX - 2,
                       y: playerY
@@ -139,7 +161,8 @@ export default class Character {
             playerX > 3 &&
             currentLevel[playerX - 3][playerY].includes('ground') &&
             left1 &&
-            left2
+            left2 &&
+            !this.isPlayerHere(playerX - 3, playerY)
                 ? {
                       x: playerX - 3,
                       y: playerY
@@ -147,7 +170,8 @@ export default class Character {
                 : false
         const right1 =
             playerX < boardDimensions.x &&
-            currentLevel[playerX + 1][playerY].includes('ground')
+            currentLevel[playerX + 1][playerY].includes('ground') &&
+            !this.isPlayerHere(playerX + 1, playerY)
                 ? {
                       x: playerX + 1,
                       y: playerY
@@ -156,7 +180,8 @@ export default class Character {
         const right2 =
             playerX < boardDimensions.x - 1 &&
             currentLevel[playerX + 2][playerY].includes('ground') &&
-            right1
+            right1 &&
+            !this.isPlayerHere(playerX + 2, playerY)
                 ? {
                       x: playerX + 2,
                       y: playerY
@@ -166,7 +191,8 @@ export default class Character {
             playerX < boardDimensions.x - 2 &&
             currentLevel[playerX + 3][playerY].includes('ground') &&
             right1 &&
-            right2
+            right2 &&
+            !this.isPlayerHere(playerX + 3, playerY)
                 ? {
                       x: playerX + 3,
                       y: playerY
@@ -189,15 +215,32 @@ export default class Character {
         }
     }
 
+    isPlayerHere(x, y) {
+        if (this.global.playersInstances) {
+            for (let player of this.global.playersInstances) {
+                if (
+                    player.pos.x === x * this.global.unit &&
+                    player.pos.y === y * this.global.unit
+                ) {
+                    return true
+                }
+            }
+            return false
+        }
+    }
+
     getClicked(x, y) {
-        if (!this.isHover(x, y)) return false
-        else {
-            return {
-                x,
-                y
+        if (this.player === this.global.currentPlayer) {
+            if (!this.isHover(x, y)) return false
+            else {
+                return {
+                    x,
+                    y
+                }
             }
         }
     }
+
     isHover(x, y) {
         return (
             this.global.mousePos.x / this.global.unit >= x &&
@@ -230,5 +273,20 @@ export default class Character {
     }
     getMousePos() {
         return this.global.mousePos
+    }
+    setFrameIndex(newFrameIndex) {
+        this.frameIndex = newFrameIndex
+    }
+    setFrames(newFrames) {
+        this.frames = newFrames
+    }
+    setCurrentPlayer(newPlayer) {
+        this.global.currentPlayer = newPlayer
+    }
+    getGlobal() {
+        return this.global
+    }
+    setGlobal(newGlobal) {
+        this.global = newGlobal
     }
 }
