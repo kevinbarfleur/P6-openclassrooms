@@ -59,6 +59,42 @@ export default class Character {
         }
     }
 
+    placeCharacter() {
+        let level = this.global.board.currentLevel
+        let dimensions = this.global.boardDimensions
+        let placed = false
+
+        let count = 0
+
+        while (placed === false) {
+            count += 1
+
+            let x, y
+
+            if (this.player === 1) {
+                x = getRandomInt(dimensions.x - 2, dimensions.x)
+                y = getRandomInt(1, dimensions.y)
+            } else {
+                x = getRandomInt(1, 3)
+                y = getRandomInt(1, dimensions.y)
+            }
+
+            if (level[y][y].includes('ground') && !this.isPlayerHere(x, y)) {
+                this.setPos({
+                    x: x * this.global.unit,
+                    y: y * this.global.unit
+                })
+
+                placed = true
+            }
+
+            if (count >= 500) {
+                placed = false
+                window.location.reload()
+            }
+        }
+    }
+
     formatFrames() {
         const frames = []
         const repeat = Math.round(this.global.fps / this.frames.length) / 9

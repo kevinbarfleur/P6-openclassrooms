@@ -6,16 +6,23 @@ import Character from './Character'
 import Board from './Board'
 import { loadImage } from './utils/loaders'
 import { getSpritesKeys } from './utils/utils'
-import { tiles, charactersSprites, moveTileSprites } from './levels/definitions'
+import {
+    tiles,
+    charactersSprites,
+    moveTileSprites,
+    decorations
+} from './levels/definitions'
 
 const canvas = document.getElementById('game')
 const context = canvas.getContext('2d')
+
 const fps = 200
 const unit = 32
 let mousePos = {
     x: 0,
     y: 0
 }
+
 let playersInstances = []
 let currentPlayer = 1
 const board = new Board({ x: 12, y: 12 })
@@ -62,6 +69,24 @@ function initPlayers(playersClasses, sprites) {
     return players
 }
 
+function isFighting() {
+    let isFighting = false
+    const pos = []
+
+    for (let char of playersInstances) {
+        pos.push(char.getPos())
+    }
+
+    if (pos.length === playersInstances.length) {
+        const distance = Math.hypot(pos[0].x - pos[1].x, pos[0].y - pos[1].y)
+        if (distance === unit) {
+            isFighting = true
+        }
+    }
+
+    return isFighting
+}
+
 function render(characters, context, sprites) {
     board.draw(currentLevel, sprites, context)
     for (let char of characters) {
@@ -95,13 +120,19 @@ loadImage(tileset).then((image) => {
         sprites.define(tile, moveTileSprites[tile].x, moveTileSprites[tile].y)
     }
 
+    for (let deco in decorations) {
+        sprites.define(deco, decorations[deco].x, decorations[deco].y)
+    }
+
     playersInstances = initPlayers(
-        [
-            { classe: 'elf', x: 3, y: 3 },
-            { classe: 'wizard', x: 3, y: 7 }
-        ],
+        [{ classe: 'elf' }, { classe: 'wizard' }],
         sprites
     )
+
+    for (let player of playersInstances) {
+        player.setGlobal(getGlobal())
+        player.placeCharacter()
+    }
 
     canvas.addEventListener('mousemove', (e) => {
         const rect = canvas.getBoundingClientRect()
@@ -128,13 +159,21 @@ loadImage(tileset).then((image) => {
                 for (let option in char.getMoveOptions()) {
                     let ite = char.getMoveOptions()[option]
                     if (char.getClicked(ite.x, ite.y)) {
-                        char.setPos({ x: ite.x * unit, y: ite.y * unit })
+                        char.setPos({
+                            x: ite.x * unit,
+                            y: ite.y * unit
+                        })
                         if (currentPlayer === playersInstances.length) {
                             currentPlayer = 1
                         } else {
                             currentPlayer += 1
                         }
                         char.setGlobal(getGlobal())
+                        if (isFighting()) {
+                            setTimeout(() => {
+                                console.log('FIGHT !')
+                            }, fps)
+                        }
                     }
                 }
             }

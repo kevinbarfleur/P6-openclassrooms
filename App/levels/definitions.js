@@ -137,6 +137,17 @@ export const tiles = {
     }
 }
 
+export const decorations = {
+    doorLeftTop: { x: 2, y: 14 },
+    doorLeftBottom: { x: 2, y: 15 },
+    doorRightTop: { x: 3, y: 14 },
+    doorRightBottom: { x: 3, y: 15 },
+    banner1: { x: 1, y: 2 },
+    banner2: { x: 2, y: 2 },
+    banner3: { x: 1, y: 3 },
+    banner4: { x: 2, y: 3 }
+}
+
 export const moveTileSprites = {
     playerOneInitial: {
         x: 1,

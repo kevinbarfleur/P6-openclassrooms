@@ -9,3 +9,26 @@ export function getSpritesKeys(sprites, keyword) {
         key.includes(keyword)
     )
 }
+
+export function getDistance(players, unit, dimensions) {
+    let farEnoughAway = false
+    const pos = []
+
+    for (let char of players) {
+        if (char.getPos().x && char.getPos().y) {
+            pos.push({
+                x: char.getPos().x / unit,
+                y: char.getPos().y / unit
+            })
+        }
+    }
+
+    if (pos.length === players.length) {
+        let smaller = dimensions.x >= dimensions.y ? dimensions.y : dimensions.x
+        if (Math.hypot(pos[0].x - pos[1].x, pos[0].y - pos[1].y) < smaller) {
+            farEnoughAway = true
+        }
+    }
+
+    return farEnoughAway
+}
