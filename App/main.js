@@ -25,7 +25,8 @@ let mousePos = {
 
 let playersInstances = []
 let currentPlayer = 1
-const board = new Board({ x: 12, y: 12 })
+const pikesDensity = '20%'
+const board = new Board({ x: 12, y: 12 }, pikesDensity)
 const currentLevel = board.getCurrentLevel()
 const boardDimensions = board.getDimensions()
 resizeCanvas(boardDimensions)
@@ -93,6 +94,7 @@ function render(characters, context, sprites) {
         char.draw(context, sprites)
         char.setGlobal(getGlobal())
     }
+    board.drawDecorations(sprites, context)
 
     requestAnimationFrame(() => render(characters, context, sprites))
 }

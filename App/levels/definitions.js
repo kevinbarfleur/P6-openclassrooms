@@ -138,6 +138,9 @@ export const tiles = {
 }
 
 export const decorations = {
+    doorBorderLeft: { x: 1, y: 14 },
+    doorBorderRight: { x: 4, y: 14 },
+    doorTop: { x: 3, y: 13 },
     doorLeftTop: { x: 2, y: 14 },
     doorLeftBottom: { x: 2, y: 15 },
     doorRightTop: { x: 3, y: 14 },
