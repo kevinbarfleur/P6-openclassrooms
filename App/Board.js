@@ -6,21 +6,44 @@ export default class Board {
         this.currentLevel = this.generateLevel()
         this.doorPosition = undefined
         this.banners = []
+        this.access = {
+            left: [],
+            right: []
+        }
 
         this.randomizeDecorationsPosition()
-        this.generateBanners()
     }
 
     draw(currentLevel, sprites, context) {
-        for (let i = 0; i <= currentLevel.length; i++) {
-            for (let j = 0; j < currentLevel.length; j++) {
+        for (let i = 0; i <= this.dimensions.y + 1; i++) {
+            for (let j = 0; j < this.dimensions.x + 1; j++) {
                 if (currentLevel[j][i]) {
-                    if (j !== 0)
+                    if (j !== 0) {
                         sprites.drawTile('ground1', context, i * 2, j * 2)
+                    }
+
+                    if (i === 0 && j > 1) {
+                        sprites.drawTile(
+                            this.access.left[j - 1],
+                            context,
+                            i * 2,
+                            j * 2
+                        )
+                    } else if (i === this.dimensions.x && j > 1) {
+                        sprites.drawTile(
+                            this.access.right[j - 1],
+                            context,
+                            i * 2,
+                            j * 2
+                        )
+                    }
+
                     sprites.drawTile(currentLevel[i][j], context, i * 2, j * 2)
                 }
             }
         }
+
+        this.drawDecorations(sprites, context)
     }
 
     drawDecorations(sprites, context) {
@@ -80,6 +103,24 @@ export default class Board {
 
     randomizeDecorationsPosition() {
         this.doorPosition = getRandomInt(2, this.dimensions.x * 2 - 3)
+        this.generateBanners()
+
+        const left = []
+        const right = []
+
+        for (let i = 0; i < this.dimensions.y; i++) {
+            const randAccess = getRandomInt(1, 7)
+            left.push(`access${randAccess}`)
+        }
+        for (let i = 0; i < this.dimensions.y; i++) {
+            const randAccess = getRandomInt(1, 7)
+            right.push(`access${randAccess}`)
+        }
+
+        this.access = {
+            left,
+            right
+        }
     }
 
     generateBanners() {
@@ -89,7 +130,6 @@ export default class Board {
             if (getRandomInt(1, 3) === 1) {
                 const id = getRandomInt(2, 5)
                 let x = getRandomInt(2, this.dimensions.x * 2)
-                console.log(x)
                 this.banners.push({
                     id,
                     x,
@@ -172,5 +212,10 @@ export default class Board {
     }
     getDimensions() {
         return this.dimensions
+    }
+    setDimensions(newDimensions) {
+        this.dimensions = newDimensions
+        this.currentLevel = this.generateLevel()
+        this.randomizeDecorationsPosition()
     }
 }

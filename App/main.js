@@ -1,6 +1,7 @@
 import './styles/style.scss'
 import tileset from './assets/tileset.png'
 
+import { handleConfiguration } from './configuration'
 import SpriteSheet from './SpriteSheet'
 import Character from './Character'
 import Board from './Board'
@@ -26,10 +27,11 @@ let mousePos = {
 let playersInstances = []
 let currentPlayer = 1
 const pikesDensity = '20%'
-const board = new Board({ x: 12, y: 12 }, pikesDensity)
+let board = new Board({ x: 12, y: 12 }, pikesDensity)
 const currentLevel = board.getCurrentLevel()
 const boardDimensions = board.getDimensions()
 resizeCanvas(boardDimensions)
+handleConfiguration(board, resizeCanvas)
 
 function getGlobal() {
     return {
@@ -94,7 +96,6 @@ function render(characters, context, sprites) {
         char.draw(context, sprites)
         char.setGlobal(getGlobal())
     }
-    board.drawDecorations(sprites, context)
 
     requestAnimationFrame(() => render(characters, context, sprites))
 }
@@ -165,6 +166,7 @@ loadImage(tileset).then((image) => {
                             x: ite.x * unit,
                             y: ite.y * unit
                         })
+                        let tempPlayer = currentPlayer
                         if (currentPlayer === playersInstances.length) {
                             currentPlayer = 1
                         } else {
@@ -173,7 +175,7 @@ loadImage(tileset).then((image) => {
                         char.setGlobal(getGlobal())
                         if (isFighting()) {
                             setTimeout(() => {
-                                console.log('FIGHT !')
+                                alert(`Player ${tempPlayer} launch a fight ! `)
                             }, fps)
                         }
                     }
