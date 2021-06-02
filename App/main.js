@@ -1,7 +1,7 @@
 import './styles/style.scss'
 import tileset from './assets/tileset.png'
 
-import { handleConfiguration } from './configuration'
+// import { handleConfiguration } from './configuration'
 import SpriteSheet from './SpriteSheet'
 import Character from './Character'
 import Board from './Board'
@@ -27,11 +27,12 @@ let mousePos = {
 let playersInstances = []
 let currentPlayer = 1
 const pikesDensity = '20%'
-let board = new Board({ x: 12, y: 12 }, pikesDensity)
+let size = 12
+let board = new Board({ x: size, y: size }, pikesDensity)
 const currentLevel = board.getCurrentLevel()
 const boardDimensions = board.getDimensions()
 resizeCanvas(boardDimensions)
-handleConfiguration(board, resizeCanvas)
+// handleConfiguration(board, resizeCanvas)
 
 function getGlobal() {
     return {
