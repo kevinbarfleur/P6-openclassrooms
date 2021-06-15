@@ -26,8 +26,8 @@ let mousePos = {
 
 let playersInstances = []
 let currentPlayer = 1
-const pikesDensity = '20%'
-let size = 12
+const pikesDensity = '10%'
+const size = 12
 let board = new Board({ x: size, y: size }, pikesDensity)
 const currentLevel = board.getCurrentLevel()
 const boardDimensions = board.getDimensions()

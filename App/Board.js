@@ -1,8 +1,9 @@
 import { getRandomInt } from './utils/utils.js'
 
 export default class Board {
-    constructor(dimensions) {
+    constructor(dimensions, pikesDensity) {
         this.dimensions = dimensions
+        this.pikesDensity = parseInt(pikesDensity.slice(0, -1))
         this.currentLevel = this.generateLevel()
         this.doorPosition = undefined
         this.banners = []
@@ -185,15 +186,15 @@ export default class Board {
                 } else if (i === x) {
                     tile = 'verticalRight'
                 } else {
-                    const randPikes = getRandomInt(1, 12)
-                    const rand = getRandomInt(1, 10)
+                    const randPikes = getRandomInt(1, 3)
+                    const rand = getRandomInt(1, 100)
                     let pikes
-                    if (randPikes > 6) {
+                    if (randPikes > 1) {
                         pikes = 'pike1'
                     } else {
                         pikes = 'pike2'
                     }
-                    if (rand <= 1) {
+                    if (rand <= this.pikesDensity) {
                         tile = pikes
                     } else {
                         tile = `ground${getRandomInt(1, 9)}`
