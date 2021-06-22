@@ -193,6 +193,13 @@ export const decorations = {
     access6: { x: 19, y: 21, depth: 2 }
 }
 
+export const weapons = {
+    sword: {
+        x: 18,
+        y: 10
+    }
+}
+
 export const moveTileSprites = {
     playerOneInitial: {
         x: 1,

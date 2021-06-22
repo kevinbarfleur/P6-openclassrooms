@@ -1,9 +1,9 @@
 import './styles/style.scss'
 import tileset from './assets/tileset.png'
 
-// import { handleConfiguration } from './configuration'
 import SpriteSheet from './SpriteSheet'
 import Character from './Character'
+import Weapon from './Weapon'
 import Board from './Board'
 import { loadImage } from './utils/loaders'
 import { getSpritesKeys } from './utils/utils'
@@ -11,7 +11,8 @@ import {
     tiles,
     charactersSprites,
     moveTileSprites,
-    decorations
+    decorations,
+    weapons
 } from './levels/definitions'
 
 const canvas = document.getElementById('game')
@@ -31,8 +32,8 @@ const size = 12
 let board = new Board({ x: size, y: size }, pikesDensity)
 const currentLevel = board.getCurrentLevel()
 const boardDimensions = board.getDimensions()
+const sword = new Weapon(8, 8, 'sword', getGlobal())
 resizeCanvas(boardDimensions)
-// handleConfiguration(board, resizeCanvas)
 
 function getGlobal() {
     return {
@@ -97,6 +98,7 @@ function render(characters, context, sprites) {
         char.draw(context, sprites)
         char.setGlobal(getGlobal())
     }
+    sword.draw(context, sprites)
 
     requestAnimationFrame(() => render(characters, context, sprites))
 }
@@ -126,6 +128,10 @@ loadImage(tileset).then((image) => {
 
     for (let deco in decorations) {
         sprites.define(deco, decorations[deco].x, decorations[deco].y)
+    }
+
+    for (let weapon in weapons) {
+        sprites.define(weapon, weapons[weapon].x, weapons[weapon].y)
     }
 
     playersInstances = initPlayers(
