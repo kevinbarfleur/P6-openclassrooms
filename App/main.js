@@ -98,7 +98,7 @@ function render(characters, context, sprites) {
         char.draw(context, sprites)
         char.setGlobal(getGlobal())
     }
-    sword.draw(context, sprites)
+    // sword.draw(context, sprites)
 
     requestAnimationFrame(() => render(characters, context, sprites))
 }
