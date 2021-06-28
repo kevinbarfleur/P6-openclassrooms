@@ -26,6 +26,7 @@ let mousePos = {
 }
 
 let playersInstances = []
+let weaponsInstances = []
 let currentPlayer = 1
 const pikesDensity = '10%'
 const size = 12
@@ -44,7 +45,8 @@ function getGlobal() {
         unit,
         mousePos,
         currentPlayer,
-        playersInstances
+        playersInstances,
+        weaponsInstances
     }
 }
 
@@ -74,6 +76,16 @@ function initPlayers(playersClasses, sprites) {
     return players
 }
 
+function initWeapons(weaponsNames) {
+    const weapons = []
+
+    weaponsNames.forEach((weapon) => {
+        weapons.push(new Weapon(weapon, getGlobal()))
+    })
+
+    return weapons
+}
+
 function isFighting() {
     let isFighting = false
     const pos = []
@@ -92,15 +104,18 @@ function isFighting() {
     return isFighting
 }
 
-function render(characters, context, sprites) {
+function render(characters, weapons, context, sprites) {
     board.draw(currentLevel, sprites, context)
     for (let char of characters) {
         char.draw(context, sprites)
         char.setGlobal(getGlobal())
     }
-    // sword.draw(context, sprites)
+    for (let weapon of weapons) {
+        weapon.draw(context, sprites)
+        weapon.setGlobal(getGlobal())
+    }
 
-    requestAnimationFrame(() => render(characters, context, sprites))
+    requestAnimationFrame(() => render(characters, weapons, context, sprites))
 }
 
 loadImage(tileset).then((image) => {
@@ -139,9 +154,16 @@ loadImage(tileset).then((image) => {
         sprites
     )
 
+    weaponsInstances = initWeapons(['sword', 'sword', 'sword', 'sword'])
+
     for (let player of playersInstances) {
         player.setGlobal(getGlobal())
         player.placeCharacter()
+    }
+
+    for (let weapon of weaponsInstances) {
+        weapon.setGlobal(getGlobal())
+        weapon.placeWeapon()
     }
 
     canvas.addEventListener('mousemove', (e) => {
@@ -191,5 +213,5 @@ loadImage(tileset).then((image) => {
         }
     })
 
-    render(playersInstances, context, sprites)
+    render(playersInstances, weaponsInstances, context, sprites)
 })

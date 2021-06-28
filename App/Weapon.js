@@ -1,19 +1,63 @@
 import { getRandomInt } from './utils/utils'
 
 export default class Weapon {
-    constructor(posX, posY, weapon, global) {
-        this.pos = { x: posX, y: posY }
+    constructor(weapon, global) {
+        this.pos = { x: null, y: null }
         this.global = global
         this.weapon = weapon
     }
 
     draw(context, sprites) {
-        sprites.draw(
-            this.weapon,
-            context,
-            this.pos.x * this.global.unit,
-            this.pos.y * this.global.unit
-        )
+        sprites.draw(this.weapon, context, this.pos.x, this.pos.y)
+    }
+
+    placeWeapon() {
+        let level = this.global.board.currentLevel
+        let dimensions = this.global.boardDimensions
+        let placed = false
+
+        let count = 0
+
+        while (placed === false) {
+            count += 1
+
+            let x, y
+
+            x = getRandomInt(1, dimensions.x)
+            y = getRandomInt(1, dimensions.y)
+
+            if (
+                level[y][y].includes('ground') &&
+                !this.isPlayerHere(x, y) &&
+                !this.isWeaponHere(x, y)
+            ) {
+                this.setPos({
+                    x: x * this.global.unit,
+                    y: y * this.global.unit
+                })
+
+                placed = true
+            }
+
+            if (count >= 500) {
+                placed = false
+                window.location.reload()
+            }
+        }
+    }
+
+    isWeaponHere(x, y) {
+        if (this.global.weaponsInstances) {
+            for (let weapon of this.global.weaponsInstances) {
+                if (
+                    weapon.pos.x === x * this.global.unit &&
+                    weapon.pos.y === y * this.global.unit
+                ) {
+                    return true
+                }
+            }
+            return false
+        }
     }
 
     isPlayerHere(x, y) {
