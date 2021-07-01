@@ -27,6 +27,10 @@ $shadow-color: #4d88b7;
     align-items: center;
     background-color: #222222;
 
+    canvas {
+        image-rendering: pixelated;
+    }
+
     .configuration {
         .section {
             font-size: 1.4em;

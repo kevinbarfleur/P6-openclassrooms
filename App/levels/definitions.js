@@ -195,8 +195,20 @@ export const decorations = {
 
 export const weapons = {
     sword: {
-        x: 18,
-        y: 10
+        x: 19,
+        y: 22
+    },
+    mace: {
+        x: 20,
+        y: 23
+    },
+    axe: {
+        x: 20,
+        y: 22
+    },
+    goldSword: {
+        x: 19,
+        y: 23
     }
 }
 

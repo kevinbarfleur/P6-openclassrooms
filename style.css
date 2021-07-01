@@ -1,2 +1,6 @@
 #app {
 }
+
+canvas {
+    image-rendering: pixelated;
+}

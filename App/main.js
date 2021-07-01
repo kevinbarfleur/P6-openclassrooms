@@ -154,12 +154,14 @@ loadImage(tileset).then((image) => {
         sprites
     )
 
-    weaponsInstances = initWeapons(['sword', 'sword', 'sword', 'sword'])
+    weaponsInstances = initWeapons(['sword', 'mace', 'axe', 'goldSword'])
 
     for (let player of playersInstances) {
         player.setGlobal(getGlobal())
         player.placeCharacter()
     }
+
+    playersInstances[0].getMoveOptions2()
 
     for (let weapon of weaponsInstances) {
         weapon.setGlobal(getGlobal())
@@ -207,6 +209,16 @@ loadImage(tileset).then((image) => {
                                 alert(`Player ${tempPlayer} launch a fight ! `)
                             }, fps)
                         }
+                        // console.log(char.getMoveOptions2(), ite.x, ite.y)
+                        // const movesOptions = []
+                        // for (let option in char.getMoveOptions2()) {
+                        //     if (char.getMoveOptions2()[option]) {
+                        //         movesOptions.push(
+                        //             char.getMoveOptions2()[option]
+                        //         )
+                        //     }
+                        // }
+                        // console.log(option)
                     }
                 }
             }
