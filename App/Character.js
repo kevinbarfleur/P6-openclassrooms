@@ -1,15 +1,14 @@
 import { getRandomInt } from './utils/utils'
 
 export default class Character {
-    constructor(player, classe, hp, inventory, posX, posY, frames, global) {
+    constructor(player, classe, weapon, hp, posX, posY, frames, global) {
         this.player = player
         this.classe = classe
+        this.weapon = weapon
         this.hp = hp
-        this.inventory = inventory
         this.pos = { x: posX, y: posY }
         this.frames = frames
         this.frameIndex = 1
-        this.moves = {}
         this.global = global
 
         this.formatFrames()

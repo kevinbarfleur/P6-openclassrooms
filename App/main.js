@@ -61,8 +61,8 @@ function initPlayers(playersClasses, sprites) {
             new Character(
                 index + 1,
                 player.classe,
+                player.weapon,
                 10,
-                [],
                 player.x * unit,
                 player.y * unit,
                 getSpritesKeys(sprites, player.classe),
@@ -120,6 +120,20 @@ function handlePlayerMove(char, ite) {
                 x: direction === 'x' ? value('x') : ite.x * unit,
                 y: direction === 'y' ? value('y') : ite.y * unit
             })
+
+            for (let weapon of weaponsInstances) {
+                if (
+                    !weapon.isHeld &&
+                    char.getPos().x === weapon.getPos().x &&
+                    char.getPos().y === weapon.getPos().y
+                ) {
+                    char.weapon = weapon.weapon
+                    weapon.isHeld = true
+                    console.log(weaponsInstances)
+                    console.log(char)
+                }
+            }
+
             if (isFighting()) {
                 setTimeout(() => {
                     alert(`Player ${currentPlayer} launch a fight ! `)
@@ -182,7 +196,10 @@ loadImage(tileset).then((image) => {
     }
 
     playersInstances = initPlayers(
-        [{ classe: 'elf' }, { classe: 'wizard' }],
+        [
+            { classe: 'elf', weapon: 'fist' },
+            { classe: 'wizard', weapon: 'head' }
+        ],
         sprites
     )
 
@@ -191,9 +208,8 @@ loadImage(tileset).then((image) => {
     for (let player of playersInstances) {
         player.setGlobal(getGlobal())
         player.placeCharacter()
+        console.log(player)
     }
-
-    playersInstances[0].getMoveOptions2()
 
     for (let weapon of weaponsInstances) {
         weapon.setGlobal(getGlobal())

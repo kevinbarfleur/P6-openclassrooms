@@ -5,10 +5,12 @@ export default class Weapon {
         this.pos = { x: null, y: null }
         this.global = global
         this.weapon = weapon
+        this.isHeld = false
     }
 
     draw(context, sprites) {
-        sprites.draw(this.weapon, context, this.pos.x, this.pos.y)
+        if (!this.isHeld)
+            sprites.draw(this.weapon, context, this.pos.x, this.pos.y)
     }
 
     placeWeapon() {
@@ -42,7 +44,6 @@ export default class Weapon {
                 !this.isPlayerHere(x, y) &&
                 !this.isWeaponHere(x, y)
             ) {
-                console.log(this.weapon, { x, y })
                 this.setPos({
                     x: x * this.global.unit,
                     y: y * this.global.unit
