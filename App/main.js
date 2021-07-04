@@ -6,7 +6,7 @@ import Character from './Character'
 import Weapon from './Weapon'
 import Board from './Board'
 import { loadImage } from './utils/loaders'
-import { getSpritesKeys } from './utils/utils'
+import { getSpritesKeys, getMoveSteps } from './utils/utils'
 import {
     tiles,
     charactersSprites,
@@ -20,20 +20,17 @@ const context = canvas.getContext('2d')
 
 const fps = 200
 const unit = 32
-let mousePos = {
-    x: 0,
-    y: 0
-}
+let mousePos = { x: 0, y: 0 }
+let isMoving = false
 
 let playersInstances = []
 let weaponsInstances = []
 let currentPlayer = 1
 const pikesDensity = '10%'
 const size = 12
-let board = new Board({ x: size, y: size }, pikesDensity)
+const board = new Board({ x: size, y: size }, pikesDensity)
 const currentLevel = board.getCurrentLevel()
 const boardDimensions = board.getDimensions()
-const sword = new Weapon(8, 8, 'sword', getGlobal())
 resizeCanvas(boardDimensions)
 
 function getGlobal() {
@@ -46,7 +43,8 @@ function getGlobal() {
         mousePos,
         currentPlayer,
         playersInstances,
-        weaponsInstances
+        weaponsInstances,
+        isMoving
     }
 }
 
@@ -102,6 +100,40 @@ function isFighting() {
     }
 
     return isFighting
+}
+
+function handlePlayerMove(char, ite) {
+    const { direction, steps } = getMoveSteps(char, ite.x, ite.y, getGlobal())
+    isMoving = true
+    setTimeout(() => {
+        isMoving = false
+    }, Math.abs(steps) * fps * 1.5)
+
+    const value = (direction) =>
+        steps <= 0
+            ? (char.getPos()[direction] / unit + 1) * unit
+            : (char.getPos()[direction] / unit - 1) * unit
+
+    for (let i = 0; i <= Math.abs(steps) - 1; i++) {
+        setTimeout(() => {
+            char.setPos({
+                x: direction === 'x' ? value('x') : ite.x * unit,
+                y: direction === 'y' ? value('y') : ite.y * unit
+            })
+            if (isFighting()) {
+                setTimeout(() => {
+                    alert(`Player ${currentPlayer} launch a fight ! `)
+                }, fps)
+                return
+            }
+        }, i * fps * 2)
+    }
+
+    if (currentPlayer === playersInstances.length) {
+        currentPlayer = 1
+    } else {
+        currentPlayer += 1
+    }
 }
 
 function render(characters, weapons, context, sprites) {
@@ -193,32 +225,7 @@ loadImage(tileset).then((image) => {
                 for (let option in char.getMoveOptions()) {
                     let ite = char.getMoveOptions()[option]
                     if (char.getClicked(ite.x, ite.y)) {
-                        char.setPos({
-                            x: ite.x * unit,
-                            y: ite.y * unit
-                        })
-                        let tempPlayer = currentPlayer
-                        if (currentPlayer === playersInstances.length) {
-                            currentPlayer = 1
-                        } else {
-                            currentPlayer += 1
-                        }
-                        char.setGlobal(getGlobal())
-                        if (isFighting()) {
-                            setTimeout(() => {
-                                alert(`Player ${tempPlayer} launch a fight ! `)
-                            }, fps)
-                        }
-                        // console.log(char.getMoveOptions2(), ite.x, ite.y)
-                        // const movesOptions = []
-                        // for (let option in char.getMoveOptions2()) {
-                        //     if (char.getMoveOptions2()[option]) {
-                        //         movesOptions.push(
-                        //             char.getMoveOptions2()[option]
-                        //         )
-                        //     }
-                        // }
-                        // console.log(option)
+                        handlePlayerMove(char, ite)
                     }
                 }
             }

@@ -15,7 +15,6 @@ export default class Weapon {
         let level = this.global.currentLevel
         let dimensions = this.global.boardDimensions
         let placed = false
-        let distanceFromPlayer = false
 
         let count = 0
 
@@ -27,24 +26,23 @@ export default class Weapon {
             x = getRandomInt(2, dimensions.x - 2)
             y = getRandomInt(2, dimensions.y - 2)
 
-            const exceptions = []
+            // const exceptions = []
             for (let players of this.global.playersInstances) {
                 const options = players.getMoveOptions()
 
                 for (let option in options) {
-                    if (options[option]) {
-                        exceptions.push(options[option])
+                    if (options[option].x === x && options[option].y === y) {
+                        continue
                     }
                 }
             }
-
-            if (exceptions.includes({ x, y })) continue
 
             if (
                 level[x][y].includes('ground') &&
                 !this.isPlayerHere(x, y) &&
                 !this.isWeaponHere(x, y)
             ) {
+                console.log(this.weapon, { x, y })
                 this.setPos({
                     x: x * this.global.unit,
                     y: y * this.global.unit

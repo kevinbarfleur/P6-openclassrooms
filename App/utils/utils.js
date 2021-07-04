@@ -32,3 +32,21 @@ export function getDistance(players, unit, dimensions) {
 
     return farEnoughAway
 }
+
+export function getMoveSteps(player, destinationX, destinationY, global) {
+    let direction,
+        steps = 0
+
+    const playerX = player.pos.x / global.unit
+    const playerY = player.pos.y / global.unit
+
+    if (playerX !== destinationX) {
+        direction = 'x'
+        steps = playerX - destinationX
+    } else {
+        direction = 'y'
+        steps = playerY - destinationY
+    }
+
+    return { steps, direction }
+}
