@@ -11,6 +11,7 @@ export default class Character {
         this.frameIndex = 1
         this.global = global
 
+        this.isMoving = false
         this.formatFrames()
     }
 
@@ -21,7 +22,7 @@ export default class Character {
             this.pos.x,
             this.pos.y
         )
-        if (this.player === this.global.currentPlayer && !this.global.isMoving)
+        if (this.player === this.global.currentPlayer && !this.isMoving)
             this.drawMoveOptions(context, sprites)
 
         this.setFrameIndex(this.frameIndex + 1)

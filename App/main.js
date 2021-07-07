@@ -21,7 +21,6 @@ const context = canvas.getContext('2d')
 const fps = 200
 const unit = 32
 let mousePos = { x: 0, y: 0 }
-let isMoving = false
 
 let playersInstances = []
 let weaponsInstances = []
@@ -43,8 +42,7 @@ function getGlobal() {
         mousePos,
         currentPlayer,
         playersInstances,
-        weaponsInstances,
-        isMoving
+        weaponsInstances
     }
 }
 
@@ -104,9 +102,9 @@ function isFighting() {
 
 function handlePlayerMove(char, ite) {
     const { direction, steps } = getMoveSteps(char, ite.x, ite.y, getGlobal())
-    isMoving = true
+    char.isMoving = true
     setTimeout(() => {
-        isMoving = false
+        char.isMoving = false
     }, Math.abs(steps) * fps * 1.5)
 
     const value = (direction) =>
@@ -129,8 +127,6 @@ function handlePlayerMove(char, ite) {
                 ) {
                     char.weapon = weapon.weapon
                     weapon.isHeld = true
-                    console.log(weaponsInstances)
-                    console.log(char)
                 }
             }
 
@@ -140,6 +136,8 @@ function handlePlayerMove(char, ite) {
                 }, fps)
                 return
             }
+
+            console.log(char.weapon)
         }, i * fps * 2)
     }
 
@@ -152,6 +150,10 @@ function handlePlayerMove(char, ite) {
 
 function render(characters, weapons, context, sprites) {
     board.draw(currentLevel, sprites, context)
+
+    /*  TODO Voir comment optimiser tout ça.
+    Limiter le nombre de verifications */
+
     for (let char of characters) {
         char.draw(context, sprites)
         char.setGlobal(getGlobal())
