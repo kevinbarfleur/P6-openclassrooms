@@ -30,6 +30,7 @@ const size = 12
 const board = new Board({ x: size, y: size }, pikesDensity)
 const currentLevel = board.getCurrentLevel()
 const boardDimensions = board.getDimensions()
+let framesPerSeconds, fpsInterval, now, then, elapsed, startTime
 resizeCanvas(boardDimensions)
 
 function getGlobal() {
@@ -104,8 +105,25 @@ function handlePlayerMove(char, ite) {
     const { direction, steps } = getMoveSteps(char, ite.x, ite.y, getGlobal())
     char.isMoving = true
     setTimeout(() => {
-        char.isMoving = false
-    }, Math.abs(steps) * fps * 1.5)
+        for (let character of playersInstances) {
+            if (character.player !== char.player) {
+                character.isMoving = false
+            }
+        }
+
+        if (currentPlayer === playersInstances.length) {
+            currentPlayer = 1
+        } else {
+            currentPlayer += 1
+        }
+
+        for (let char of playersInstances) {
+            char.setGlobal(getGlobal())
+        }
+        for (let weapon of weaponsInstances) {
+            weapon.setGlobal(getGlobal())
+        }
+    }, Math.abs(steps) * fps * 1.4)
 
     const value = (direction) =>
         steps <= 0
@@ -136,34 +154,40 @@ function handlePlayerMove(char, ite) {
                 }, fps)
                 return
             }
-
-            console.log(char.weapon)
         }, i * fps * 2)
-    }
-
-    if (currentPlayer === playersInstances.length) {
-        currentPlayer = 1
-    } else {
-        currentPlayer += 1
     }
 }
 
+function initRendering(
+    framesPerSeconds,
+    characters,
+    weapons,
+    context,
+    sprites
+) {
+    fpsInterval = 1000 / framesPerSeconds
+    then = Date.now()
+    startTime = then
+    render(characters, weapons, context, sprites)
+}
+
 function render(characters, weapons, context, sprites) {
-    board.draw(currentLevel, sprites, context)
-
-    /*  TODO Voir comment optimiser tout ça.
-    Limiter le nombre de verifications */
-
-    for (let char of characters) {
-        char.draw(context, sprites)
-        char.setGlobal(getGlobal())
-    }
-    for (let weapon of weapons) {
-        weapon.draw(context, sprites)
-        weapon.setGlobal(getGlobal())
-    }
-
     requestAnimationFrame(() => render(characters, weapons, context, sprites))
+
+    now = Date.now()
+    elapsed = now - then
+
+    if (elapsed > fpsInterval) {
+        then = now - (elapsed % fpsInterval)
+
+        board.draw(currentLevel, sprites, context)
+        for (let char of characters) {
+            char.draw(context, sprites)
+        }
+        for (let weapon of weapons) {
+            weapon.draw(context, sprites)
+        }
+    }
 }
 
 loadImage(tileset).then((image) => {
@@ -250,5 +274,5 @@ loadImage(tileset).then((image) => {
         }
     })
 
-    render(playersInstances, weaponsInstances, context, sprites)
+    initRendering(fps, playersInstances, weaponsInstances, context, sprites)
 })
