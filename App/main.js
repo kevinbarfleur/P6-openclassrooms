@@ -30,7 +30,7 @@ const size = 12
 const board = new Board({ x: size, y: size }, pikesDensity)
 const currentLevel = board.getCurrentLevel()
 const boardDimensions = board.getDimensions()
-let framesPerSeconds, fpsInterval, now, then, elapsed, startTime
+let fpsInterval, now, then, elapsed, startTime
 resizeCanvas(boardDimensions)
 
 function getGlobal() {
