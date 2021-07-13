@@ -164,7 +164,7 @@ function printInfo() {
     const container = document.querySelector('.panel-info')
     container.innerHTML = ''
     const template = (player, classe, life, weapon) => `
-    <div class="player-info pixel-borders">
+    <div class="player-info">
         ${player} <br />
         Class : ${classe} <br />
         Life : <span class="life">${life}</span>Hp <br />
