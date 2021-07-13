@@ -154,7 +154,31 @@ function handlePlayerMove(char, ite) {
                 }, fps)
                 return
             }
+
+            printInfo()
         }, i * fps * 2)
+    }
+}
+
+function printInfo() {
+    const container = document.querySelector('.panel-info')
+    container.innerHTML = ''
+    const template = (player, classe, life, weapon) => `
+    <div class="player-info pixel-borders">
+        ${player} <br />
+        Class : ${classe} <br />
+        Life : <span class="life">${life}</span>Hp <br />
+        Weapon: ${weapon}
+    </div>
+    `
+
+    for (let player of playersInstances) {
+        container.innerHTML += template(
+            `Player ${player.player}`,
+            player.classe,
+            player.hp,
+            player.weapon
+        )
     }
 }
 
@@ -274,5 +298,6 @@ loadImage(tileset).then((image) => {
         }
     })
 
+    printInfo()
     initRendering(fps, playersInstances, weaponsInstances, context, sprites)
 })

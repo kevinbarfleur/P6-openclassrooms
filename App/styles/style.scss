@@ -5,6 +5,8 @@ $button-background: #99c1e0;
 $sec-button-background: #5698cc;
 $shadow-color: #4d88b7;
 
+@import 'node_modules/pixel-borders/src/styles/pixel-borders.scss';
+
 @font-face {
     font-family: Blocky;
     src: url('../assets/Blocky5x7.ttf');
@@ -29,6 +31,34 @@ $shadow-color: #4d88b7;
 
     canvas {
         image-rendering: pixelated;
+    }
+
+    .panel-info {
+        width: 100%;
+        max-width: 416px;
+        margin-top: 12px;
+
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+
+        .player-info {
+            font-family: 'Blocky';
+            font-size: 1.2em;
+            color: white;
+            padding: 12px;
+            border: 2px solid green;
+            width: 48%;
+            text-shadow: black 0.1em 0.1em 0.2em;
+            background-color: #6e5650;
+            border: black;
+            margin: 12px;
+            box-shadow: black 0.1em 0.1em 0.2em;
+
+            .life {
+                color: #ef5350;
+            }
+        }
     }
 
     .configuration {
