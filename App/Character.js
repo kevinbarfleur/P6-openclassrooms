@@ -5,6 +5,7 @@ export default class Character {
         this.player = player
         this.classe = classe
         this.weapon = weapon
+        this.dmg = 1
         this.hp = hp
         this.pos = { x: posX, y: posY }
         this.frames = frames
@@ -97,7 +98,7 @@ export default class Character {
 
     formatFrames() {
         const frames = []
-        const repeat = Math.round(this.global.fps / this.frames.length) / 9
+        const repeat = Math.round(this.global.fps / this.frames.length) / 64
 
         for (let i = 0; i < this.frames.length; i++) {
             for (let j = 0; j < repeat; j++) {

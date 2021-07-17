@@ -4,13 +4,13 @@ export default class Weapon {
     constructor(weapon, global) {
         this.pos = { x: null, y: null }
         this.global = global
-        this.weapon = weapon
+        this.weapon = weapon.name
+        this.dmg = weapon.dmg
         this.isHeld = false
     }
 
     draw(context, sprites) {
-        if (!this.isHeld)
-            sprites.draw(this.weapon, context, this.pos.x, this.pos.y)
+        sprites.draw(this.weapon, context, this.pos.x, this.pos.y)
     }
 
     placeWeapon() {
@@ -28,7 +28,6 @@ export default class Weapon {
             x = getRandomInt(2, dimensions.x - 2)
             y = getRandomInt(2, dimensions.y - 2)
 
-            // const exceptions = []
             for (let players of this.global.playersInstances) {
                 const options = players.getMoveOptions()
 

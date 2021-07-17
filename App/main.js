@@ -15,6 +15,8 @@ import {
     weapons
 } from './levels/definitions'
 
+import heartImage from './assets/heart.png'
+
 const canvas = document.getElementById('game')
 const context = canvas.getContext('2d')
 
@@ -73,10 +75,10 @@ function initPlayers(playersClasses, sprites) {
     return players
 }
 
-function initWeapons(weaponsNames) {
+function initWeapons(weaponsOptions) {
     const weapons = []
 
-    weaponsNames.forEach((weapon) => {
+    weaponsOptions.forEach((weapon) => {
         weapons.push(new Weapon(weapon, getGlobal()))
     })
 
@@ -101,7 +103,7 @@ function isFighting() {
     return isFighting
 }
 
-function handlePlayerMove(char, ite) {
+function handlePlayerMove(char, ite, sprites) {
     const { direction, steps } = getMoveSteps(char, ite.x, ite.y, getGlobal())
     char.isMoving = true
     setTimeout(() => {
@@ -143,7 +145,21 @@ function handlePlayerMove(char, ite) {
                     char.getPos().x === weapon.getPos().x &&
                     char.getPos().y === weapon.getPos().y
                 ) {
+                    if (char.weapon !== 'fist' && char.weapon !== 'head') {
+                        let currentWeapon = weaponsInstances.filter(
+                            (weapon) => weapon.weapon === char.weapon
+                        )
+                        setTimeout(() => {
+                            currentWeapon[0].isHeld = false
+                            currentWeapon[0].setPos({
+                                x: char.getPos().x,
+                                y: char.getPos().y
+                            })
+                        }, 100)
+                    }
+
                     char.weapon = weapon.weapon
+                    char.dmg = weapon.dmg
                     weapon.isHeld = true
                 }
             }
@@ -155,31 +171,88 @@ function handlePlayerMove(char, ite) {
                 return
             }
 
-            printInfo()
+            printInfo(sprites)
         }, i * fps * 2)
     }
 }
 
-function printInfo() {
+function drawHearts(life) {
+    let template = ''
+
+    for (let i = 0; i < life; i++) {
+        template += `
+        <div class="heart-container">
+            <img src="${heartImage}"></img>
+        </div>
+        `
+    }
+
+    return template
+}
+
+function printInfo(sprites) {
     const container = document.querySelector('.panel-info')
     container.innerHTML = ''
-    const template = (player, classe, life, weapon) => `
-    <div class="player-info">
-        ${player} <br />
-        Class : ${classe} <br />
-        Life : <span class="life">${life}</span>Hp <br />
-        Weapon: ${weapon}
-    </div>
+    const template = (player, classe, life, weapon, dmg) => `
+        <div class="player-info">
+            <h3>Player ${player} </h3>
+            <p>Class : ${classe} </p>
+            <div class="life">
+                <p class="life-label">Life: </p>
+                ${drawHearts(life)}
+            </div>
+            <p>Weapon: <span class="weapon-player-${player}"></span> </p>
+            <p>Dammages:  ${dmg}</p>
+        </div>
     `
 
     for (let player of playersInstances) {
         container.innerHTML += template(
-            `Player ${player.player}`,
+            player.player,
             player.classe,
             player.hp,
-            player.weapon
+            player.weapon,
+            player.dmg
         )
+
+        if (player.weapon !== 'fist' && player.weapon !== 'head') {
+            const weaponContainer = document.querySelector(
+                `.weapon-player-${player.player}`
+            )
+            weaponContainer.innerHTML = ''
+            const canvas = cloneCanvas(getSpriteElement(player.weapon, sprites))
+            console.log(canvas)
+            weaponContainer.appendChild(canvas)
+        }
     }
+}
+
+function cloneCanvas(oldCanvas) {
+    //create a new canvas
+    var newCanvas = document.createElement('canvas')
+    var context = newCanvas.getContext('2d')
+
+    //set dimensions
+    newCanvas.width = oldCanvas.width
+    newCanvas.height = oldCanvas.height
+
+    //apply the old canvas to the new one
+    context.drawImage(oldCanvas, 0, 0)
+
+    //return the new canvas
+    return newCanvas
+}
+
+function getSpriteElement(name, sprites) {
+    if (sprites) {
+        const element = Array.from(sprites.tiles).filter(
+            (sprite) => sprite[0] === name
+        )
+
+        return element[0][1]
+    }
+
+    return []
 }
 
 function initRendering(
@@ -209,7 +282,7 @@ function render(characters, weapons, context, sprites) {
             char.draw(context, sprites)
         }
         for (let weapon of weapons) {
-            weapon.draw(context, sprites)
+            if (!weapon.isHeld) weapon.draw(context, sprites)
         }
     }
 }
@@ -253,7 +326,12 @@ loadImage(tileset).then((image) => {
         sprites
     )
 
-    weaponsInstances = initWeapons(['sword', 'mace', 'axe', 'goldSword'])
+    weaponsInstances = initWeapons([
+        { name: 'sword', dmg: '3' },
+        { name: 'mace', dmg: '2' },
+        { name: 'axe', dmg: '4' },
+        { name: 'goldSword', dmg: '5' }
+    ])
 
     for (let player of playersInstances) {
         player.setGlobal(getGlobal())
@@ -291,13 +369,13 @@ loadImage(tileset).then((image) => {
                 for (let option in char.getMoveOptions()) {
                     let ite = char.getMoveOptions()[option]
                     if (char.getClicked(ite.x, ite.y)) {
-                        handlePlayerMove(char, ite)
+                        handlePlayerMove(char, ite, sprites)
                     }
                 }
             }
         }
     })
 
-    printInfo()
-    initRendering(fps, playersInstances, weaponsInstances, context, sprites)
+    printInfo(sprites)
+    initRendering(12, playersInstances, weaponsInstances, context, sprites)
 })
