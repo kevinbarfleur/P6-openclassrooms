@@ -1,12 +1,12 @@
 import { getRandomInt } from './utils/utils'
 
 export default class Weapon {
-    constructor(weapon, global) {
+    constructor(weapon, global, isHeld) {
         this.pos = { x: null, y: null }
         this.global = global
         this.weapon = weapon.name
         this.dmg = weapon.dmg
-        this.isHeld = false
+        this.isHeld = isHeld
     }
 
     draw(context, sprites) {

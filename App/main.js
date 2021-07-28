@@ -84,7 +84,7 @@ function initWeapons(weaponsOptions) {
     const weapons = []
 
     weaponsOptions.forEach((weapon) => {
-        weapons.push(new Weapon(weapon, getGlobal()))
+        weapons.push(new Weapon(weapon, getGlobal(), weapon.isHeld))
     })
 
     return weapons
@@ -339,17 +339,19 @@ loadImage(tileset).then((image) => {
 
     playersInstances = initPlayers(
         [
-            { classe: 'elf', weapon: 'fist' },
-            { classe: 'wizard', weapon: 'head' }
+            { classe: 'elf', weapon: 'knife' },
+            { classe: 'wizard', weapon: 'staff' }
         ],
         sprites
     )
 
     weaponsInstances = initWeapons([
-        { name: 'sword', dmg: '3' },
-        { name: 'mace', dmg: '2' },
-        { name: 'axe', dmg: '4' },
-        { name: 'goldSword', dmg: '5' }
+        { name: 'staff', dmg: '1', isHeld: true },
+        { name: 'knife', dmg: '1', isHeld: true },
+        { name: 'sword', dmg: '3', isHeld: false },
+        { name: 'mace', dmg: '2', isHeld: false },
+        { name: 'axe', dmg: '4', isHeld: false },
+        { name: 'goldSword', dmg: '5', isHeld: false }
     ])
 
     for (let player of playersInstances) {

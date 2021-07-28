@@ -209,6 +209,14 @@ export const weapons = {
     goldSword: {
         x: 19,
         y: 23
+    },
+    staff: {
+        x: 18,
+        y: 12
+    },
+    knife: {
+        x: 18,
+        y: 1
     }
 }
 
