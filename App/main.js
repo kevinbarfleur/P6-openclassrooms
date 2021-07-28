@@ -17,12 +17,17 @@ import {
 
 import heartImage from './assets/heart.png'
 
-const canvas = document.getElementById('game')
-const context = canvas.getContext('2d')
+const boardCanvas = document.getElementById('board')
+const context = boardCanvas.getContext('2d')
+
+const fightCanvas = document.getElementById('fight')
+const contextFight = fightCanvas.getContext('2d')
 
 const fps = 200
+const playerMoveSpeed = 1.4
 const unit = 32
 let mousePos = { x: 0, y: 0 }
+let gamePhase = 'board'
 
 let playersInstances = []
 let weaponsInstances = []
@@ -50,8 +55,8 @@ function getGlobal() {
 }
 
 function resizeCanvas(boardDimensions) {
-    canvas.width = boardDimensions.x * unit + unit
-    canvas.height = boardDimensions.y * unit + unit
+    boardCanvas.width = boardDimensions.x * unit + unit
+    boardCanvas.height = boardDimensions.y * unit + unit
 }
 
 function initPlayers(playersClasses, sprites) {
@@ -125,7 +130,7 @@ function handlePlayerMove(char, ite, sprites) {
         for (let weapon of weaponsInstances) {
             weapon.setGlobal(getGlobal())
         }
-    }, Math.abs(steps) * fps * 1.4)
+    }, Math.abs(steps) * fps * playerMoveSpeed)
 
     const value = (direction) =>
         steps <= 0
@@ -164,13 +169,7 @@ function handlePlayerMove(char, ite, sprites) {
                 }
             }
 
-            if (isFighting()) {
-                setTimeout(() => {
-                    alert(`Player ${currentPlayer} launch a fight ! `)
-                }, fps)
-                return
-            }
-
+            handleGamePhase(isFighting(), currentPlayer, fps)
             printInfo(sprites)
         }, i * fps * 2)
     }
@@ -181,9 +180,9 @@ function drawHearts(life) {
 
     for (let i = 0; i < life; i++) {
         template += `
-        <div class="heart-container">
-            <img src="${heartImage}"></img>
-        </div>
+            <div class="heart-container">
+                <img src="${heartImage}"></img>
+            </div>
         `
     }
 
@@ -193,6 +192,7 @@ function drawHearts(life) {
 function printInfo(sprites) {
     const container = document.querySelector('.panel-info')
     container.innerHTML = ''
+
     const template = (player, classe, life, weapon, dmg) => `
         <div class="player-info">
             <h3>Player ${player} </h3>
@@ -201,7 +201,7 @@ function printInfo(sprites) {
                 <p class="life-label">Life: </p>
                 ${drawHearts(life)}
             </div>
-            <p>Weapon: <span class="weapon-player-${player}"></span> </p>
+            <p>Weapon: ${weapon} <span class="weapon-player-${player}"></span> </p>
             <p>Dammages:  ${dmg}</p>
         </div>
     `
@@ -219,11 +219,30 @@ function printInfo(sprites) {
             const weaponContainer = document.querySelector(
                 `.weapon-player-${player.player}`
             )
+
             weaponContainer.innerHTML = ''
             const canvas = cloneCanvas(getSpriteElement(player.weapon, sprites))
-            console.log(canvas)
             weaponContainer.appendChild(canvas)
         }
+    }
+}
+
+function handleGamePhase(isFighting, fps) {
+    if (isFighting) {
+        setTimeout(() => {
+            gamePhase = 'fight'
+            boardCanvas.classList.add('fade-out')
+            setTimeout(() => {
+                boardCanvas.classList.remove('active')
+            }, 600)
+            setTimeout(() => {
+                fightCanvas.classList.add('active')
+                setTimeout(() => {
+                    fightCanvas.classList.add('fade-in')
+                }, 100)
+            }, 600)
+        }, fps)
+        return
     }
 }
 
@@ -344,8 +363,8 @@ loadImage(tileset).then((image) => {
         weapon.placeWeapon()
     }
 
-    canvas.addEventListener('mousemove', (e) => {
-        const rect = canvas.getBoundingClientRect()
+    boardCanvas.addEventListener('mousemove', (e) => {
+        const rect = boardCanvas.getBoundingClientRect()
         mousePos = {
             x: e.clientX - rect.left,
             y: e.clientY - rect.top
@@ -356,8 +375,8 @@ loadImage(tileset).then((image) => {
         }
     })
 
-    canvas.addEventListener('click', (e) => {
-        const rect = canvas.getBoundingClientRect()
+    boardCanvas.addEventListener('click', (e) => {
+        const rect = boardCanvas.getBoundingClientRect()
         mousePos = {
             x: e.clientX - rect.left,
             y: e.clientY - rect.top
@@ -377,5 +396,5 @@ loadImage(tileset).then((image) => {
     })
 
     printInfo(sprites)
-    initRendering(12, playersInstances, weaponsInstances, context, sprites)
+    initRendering(8, playersInstances, weaponsInstances, context, sprites)
 })

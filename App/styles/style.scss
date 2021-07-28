@@ -32,6 +32,37 @@ $shadow-color: #4d88b7;
         image-rendering: pixelated;
     }
 
+    #board {
+        display: none;
+        opacity: 1;
+        transition: 0.6s;
+
+        &.fade-out {
+            opacity: 0;
+            transition: 0.6s;
+        }
+
+        &.active {
+            display: flex;
+        }
+    }
+
+    #fight {
+        display: none;
+        opacity: 0;
+        transition: 0.6s;
+
+        &.fade-in {
+            opacity: 1;
+            transition: 0.6s;
+        }
+
+        &.active {
+            display: flex;
+            border: 1px solid red;
+        }
+    }
+
     .title {
         font-family: 'Blocky';
         font-size: 3em;
