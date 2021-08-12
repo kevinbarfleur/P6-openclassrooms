@@ -5,7 +5,7 @@ export default class Character {
         this.player = player
         this.classe = classe
         this.weapon = weapon
-        this.dmg = 1
+        this.dmg = 10
         this.hp = hp
         this.pos = { x: posX, y: posY }
         this.frames = frames

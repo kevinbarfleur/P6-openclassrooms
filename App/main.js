@@ -68,7 +68,7 @@ function initPlayers(playersClasses, sprites) {
                 index + 1,
                 player.classe,
                 player.weapon,
-                10,
+                100,
                 player.x * unit,
                 player.y * unit,
                 getSpritesKeys(sprites, player.classe),
@@ -198,8 +198,7 @@ function printInfo(sprites) {
             <h3>Player ${player} </h3>
             <p>Class : ${classe} </p>
             <div class="life">
-                <p class="life-label">Life: </p>
-                ${drawHearts(life)}
+                <p class="life-label">Life:  ${life} HP </p>
             </div>
             <p>Weapon: ${weapon} <span class="weapon-player-${player}"></span> </p>
             <p>Dammages:  ${dmg}</p>
@@ -346,12 +345,12 @@ loadImage(tileset).then((image) => {
     )
 
     weaponsInstances = initWeapons([
-        { name: 'staff', dmg: '1', isHeld: true },
-        { name: 'knife', dmg: '1', isHeld: true },
-        { name: 'sword', dmg: '3', isHeld: false },
-        { name: 'mace', dmg: '2', isHeld: false },
-        { name: 'axe', dmg: '4', isHeld: false },
-        { name: 'goldSword', dmg: '5', isHeld: false }
+        { name: 'staff', dmg: '10', isHeld: true },
+        { name: 'knife', dmg: '10', isHeld: true },
+        { name: 'sword', dmg: '30', isHeld: false },
+        { name: 'mace', dmg: '20', isHeld: false },
+        { name: 'axe', dmg: '40', isHeld: false },
+        { name: 'goldSword', dmg: '50', isHeld: false }
     ])
 
     for (let player of playersInstances) {
