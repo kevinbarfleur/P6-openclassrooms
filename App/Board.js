@@ -1,10 +1,11 @@
 import { getRandomInt } from './utils/utils.js'
 
 export default class Board {
-    constructor(dimensions, pikesDensity) {
+    constructor(dimensions, pikesDensity, gamePhase) {
         this.dimensions = dimensions
         this.pikesDensity = parseInt(pikesDensity.slice(0, -1))
         this.currentLevel = this.generateLevel()
+        this.gamePhase = gamePhase
         this.doorPosition = undefined
         this.banners = []
         this.access = {

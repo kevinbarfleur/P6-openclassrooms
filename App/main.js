@@ -7,6 +7,7 @@ import Weapon from './Weapon'
 import Board from './Board'
 import { loadImage } from './utils/loaders'
 import { getSpritesKeys, getMoveSteps } from './utils/utils'
+import { initSelectors } from './fightActions'
 import {
     tiles,
     charactersSprites,
@@ -20,13 +21,17 @@ import heartImage from './assets/heart.png'
 const boardCanvas = document.getElementById('board')
 const context = boardCanvas.getContext('2d')
 
-const fightCanvas = document.getElementById('fight')
-const contextFight = fightCanvas.getContext('2d')
+const fightContainer = document.getElementById('fight')
+const instructionContainer = document.querySelector('.instruction')
+const actionContainer = document.querySelector('.action')
+const attackButton = document.querySelector('.attack')
+const defendButton = document.querySelector('.defend')
 
 const fps = 200
 const playerMoveSpeed = 1.4
 const unit = 32
 let mousePos = { x: 0, y: 0 }
+
 let gamePhase = 'board'
 
 let playersInstances = []
@@ -34,9 +39,10 @@ let weaponsInstances = []
 let currentPlayer = 1
 const pikesDensity = '10%'
 const size = 12
-const board = new Board({ x: size, y: size }, pikesDensity)
+const board = new Board({ x: size, y: size }, pikesDensity, gamePhase)
 const currentLevel = board.getCurrentLevel()
 const boardDimensions = board.getDimensions()
+
 let fpsInterval, now, then, elapsed, startTime
 resizeCanvas(boardDimensions)
 
@@ -169,7 +175,9 @@ function handlePlayerMove(char, ite, sprites) {
                 }
             }
 
+            // AUTO FIGHT
             handleGamePhase(isFighting(), currentPlayer, fps)
+            // handleGamePhase(true, currentPlayer, fps)
             printInfo(sprites)
         }, i * fps * 2)
     }
@@ -200,7 +208,7 @@ function printInfo(sprites) {
             <div class="life">
                 <p class="life-label">Life:  ${life} HP </p>
             </div>
-            <p>Weapon: ${weapon} <span class="weapon-player-${player}"></span> </p>
+            <p>Weapon: ${weapon} </p>
             <p>Dammages:  ${dmg}</p>
         </div>
     `
@@ -213,16 +221,17 @@ function printInfo(sprites) {
             player.weapon,
             player.dmg
         )
+    }
 
-        if (player.weapon !== 'fist' && player.weapon !== 'head') {
-            const weaponContainer = document.querySelector(
-                `.weapon-player-${player.player}`
-            )
+    if (gamePhase === 'fight') {
+        const currentClass = currentPlayer === 1 ? 'red' : 'blue'
+        const instructionTemplate = () => `
+            <div class="${currentClass}">
+                Player <span>${currentPlayer}</span>
+            </div>
+        `
 
-            weaponContainer.innerHTML = ''
-            const canvas = cloneCanvas(getSpriteElement(player.weapon, sprites))
-            weaponContainer.appendChild(canvas)
-        }
+        instructionContainer.innerHTML = instructionTemplate(currentClass)
     }
 }
 
@@ -235,9 +244,9 @@ function handleGamePhase(isFighting, fps) {
                 boardCanvas.classList.remove('active')
             }, 600)
             setTimeout(() => {
-                fightCanvas.classList.add('active')
+                fightContainer.classList.add('active')
                 setTimeout(() => {
-                    fightCanvas.classList.add('fade-in')
+                    fightContainer.classList.add('fade-in')
                 }, 100)
             }, 600)
         }, fps)
@@ -295,7 +304,9 @@ function render(characters, weapons, context, sprites) {
     if (elapsed > fpsInterval) {
         then = now - (elapsed % fpsInterval)
 
+        board.gamePhase = gamePhase
         board.draw(currentLevel, sprites, context)
+
         for (let char of characters) {
             char.draw(context, sprites)
         }
@@ -303,6 +314,9 @@ function render(characters, weapons, context, sprites) {
             if (!weapon.isHeld) weapon.draw(context, sprites)
         }
     }
+
+    console.log(currentPlayer)
+    printInfo(sprites)
 }
 
 loadImage(tileset).then((image) => {
@@ -396,6 +410,8 @@ loadImage(tileset).then((image) => {
         }
     })
 
-    printInfo(sprites)
+    // AUTO FIGHT
     initRendering(8, playersInstances, weaponsInstances, context, sprites)
+    handleGamePhase(true, currentPlayer, fps)
+    initSelectors(actionContainer, attackButton, defendButton, getGlobal())
 })

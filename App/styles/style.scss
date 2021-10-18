@@ -48,6 +48,7 @@ $shadow-color: #4d88b7;
     }
 
     #fight {
+        position: relative;
         display: none;
         opacity: 0;
         transition: 0.6s;
@@ -59,7 +60,103 @@ $shadow-color: #4d88b7;
 
         &.active {
             display: flex;
-            border: 1px solid red;
+            flex-direction: column;
+        }
+
+        .instruction {
+            position: absolute;
+            top: 10px;
+            left: 50%;
+            transform: translate(-50%);
+
+            .red {
+                color: red;
+            }
+
+            .blue {
+                color: blue;
+            }
+        }
+
+        .fight-area {
+            display: flex;
+            flex-direction: row;
+            width: 450px;
+            height: 200px;
+
+            .right {
+                display: flex;
+                flex-direction: column;
+                justify-content: flex-start;
+                align-items: flex-end;
+                width: 50%;
+                height: 100%;
+                border: 1px solid grey;
+
+                .player-container {
+                    margin-top: 120px;
+                    margin-right: 70px;
+                    width: 30px;
+                    height: 30px;
+                    background-color: blue;
+                }
+            }
+
+            .left {
+                display: flex;
+                flex-direction: column;
+                justify-content: flex-start;
+                align-items: flex-start;
+                width: 50%;
+                height: 100%;
+                border: 1px solid grey;
+
+                .player-container {
+                    margin-top: 120px;
+                    margin-left: 70px;
+                    width: 30px;
+                    height: 30px;
+                    background-color: red;
+                }
+            }
+        }
+
+        .action {
+            display: flex;
+            margin-top: 12px;
+            width: 222px;
+            display: flex;
+            justify-content: space-between;
+
+            &.left {
+                transform: translateX(0);
+                transition: 0.5s;
+
+                button {
+                    border: 1px solid red;
+                }
+            }
+            &.right {
+                transform: translateX(100%);
+                margin-left: 6px;
+                transition: 0.5s;
+
+                button {
+                    border: 1px solid blue;
+                }
+            }
+
+            button {
+                width: 48%;
+                font-family: 'Blocky';
+                font-size: 1em;
+                color: white;
+                padding: 12px;
+                text-shadow: black 0.1em 0.1em 0.2em;
+                background-color: #6e5650;
+                border: black;
+                box-shadow: black 0.1em 0.1em 0.2em;
+            }
         }
     }
 
@@ -71,7 +168,7 @@ $shadow-color: #4d88b7;
 
     .panel-info {
         width: 100%;
-        max-width: 416px;
+        max-width: 450px;
         margin-top: 12px;
 
         display: flex;
@@ -84,11 +181,10 @@ $shadow-color: #4d88b7;
             color: white;
             padding: 12px;
             border: 2px solid green;
-            width: 48%;
+            width: 44%;
             text-shadow: black 0.1em 0.1em 0.2em;
             background-color: #6e5650;
             border: black;
-            margin: 12px;
             box-shadow: black 0.1em 0.1em 0.2em;
 
             .life {

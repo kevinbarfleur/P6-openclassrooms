@@ -15,7 +15,24 @@
         <div id="app">
             <div class="title">16Bit Heroes</div>
             <canvas id="board" class="active"></canvas>
-            <canvas id="fight"></canvas>
+            <div id="fight">
+                <div class="instruction"></div>
+                <div class="fight-area">
+                    <div class="left">
+                        <div class="life-container"></div>
+                        <div class="player-container"></div>
+                    </div>
+                    <div class="right">
+                        <div class="life-container"></div>
+                        <div class="player-container"></div>
+                    </div>
+                </div>
+
+                <div class="action left">
+                    <button class="attack">Attack 🗡</button>
+                    <button class="defend">Deffend 🛡</button>
+                </div>
+            </div>
             <div class="panel-info"></div>
         </div>
         <script type="module" src="/App/main.js"></script>
