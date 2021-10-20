@@ -7,7 +7,7 @@ import Weapon from './Weapon'
 import Board from './Board'
 import { loadImage } from './utils/loaders'
 import { getSpritesKeys, getMoveSteps } from './utils/utils'
-import { initSelectors } from './fightActions'
+import { handleFightActions } from './fightActions'
 import {
     tiles,
     charactersSprites,
@@ -21,6 +21,7 @@ import heartImage from './assets/heart.png'
 const boardCanvas = document.getElementById('board')
 const context = boardCanvas.getContext('2d')
 
+export const infoContainer = document.querySelector('.panel-info')
 const fightContainer = document.getElementById('fight')
 const instructionContainer = document.querySelector('.instruction')
 const actionContainer = document.querySelector('.action')
@@ -46,7 +47,7 @@ const boardDimensions = board.getDimensions()
 let fpsInterval, now, then, elapsed, startTime
 resizeCanvas(boardDimensions)
 
-function getGlobal() {
+export function getGlobal() {
     return {
         board,
         fps,
@@ -114,6 +115,23 @@ function isFighting() {
     return isFighting
 }
 
+function nextPlayer() {
+    if (currentPlayer === playersInstances.length) {
+        currentPlayer = 1
+    } else {
+        currentPlayer += 1
+    }
+}
+
+function updateGlobalVariables() {
+    for (let char of playersInstances) {
+        char.setGlobal(getGlobal())
+    }
+    for (let weapon of weaponsInstances) {
+        weapon.setGlobal(getGlobal())
+    }
+}
+
 function handlePlayerMove(char, ite, sprites) {
     const { direction, steps } = getMoveSteps(char, ite.x, ite.y, getGlobal())
     char.isMoving = true
@@ -124,18 +142,8 @@ function handlePlayerMove(char, ite, sprites) {
             }
         }
 
-        if (currentPlayer === playersInstances.length) {
-            currentPlayer = 1
-        } else {
-            currentPlayer += 1
-        }
-
-        for (let char of playersInstances) {
-            char.setGlobal(getGlobal())
-        }
-        for (let weapon of weaponsInstances) {
-            weapon.setGlobal(getGlobal())
-        }
+        nextPlayer()
+        updateGlobalVariables()
     }, Math.abs(steps) * fps * playerMoveSpeed)
 
     const value = (direction) =>
@@ -175,10 +183,8 @@ function handlePlayerMove(char, ite, sprites) {
                 }
             }
 
-            // AUTO FIGHT
             handleGamePhase(isFighting(), currentPlayer, fps)
-            // handleGamePhase(true, currentPlayer, fps)
-            printInfo(sprites)
+            printInfo(infoContainer, playersInstances)
         }, i * fps * 2)
     }
 }
@@ -197,8 +203,7 @@ function drawHearts(life) {
     return template
 }
 
-function printInfo(sprites) {
-    const container = document.querySelector('.panel-info')
+function printInfo(container, playersInstances) {
     container.innerHTML = ''
 
     const template = (player, classe, life, weapon, dmg) => `
@@ -223,6 +228,10 @@ function printInfo(sprites) {
         )
     }
 
+    // console.log(playersInstances[0].hp, playersInstances[1].hp)
+}
+
+function printInstructions() {
     if (gamePhase === 'fight') {
         const currentClass = currentPlayer === 1 ? 'red' : 'blue'
         const instructionTemplate = () => `
@@ -235,7 +244,7 @@ function printInfo(sprites) {
     }
 }
 
-function handleGamePhase(isFighting, fps) {
+function handleGamePhase(isFighting, fps, sprites) {
     if (isFighting) {
         setTimeout(() => {
             gamePhase = 'fight'
@@ -315,8 +324,7 @@ function render(characters, weapons, context, sprites) {
         }
     }
 
-    console.log(currentPlayer)
-    printInfo(sprites)
+    printInfo(infoContainer, playersInstances)
 }
 
 loadImage(tileset).then((image) => {
@@ -410,8 +418,14 @@ loadImage(tileset).then((image) => {
         }
     })
 
-    // AUTO FIGHT
+    // handleGamePhase(true, currentPlayer, fps, sprites)
     initRendering(8, playersInstances, weaponsInstances, context, sprites)
-    handleGamePhase(true, currentPlayer, fps)
-    initSelectors(actionContainer, attackButton, defendButton, getGlobal())
+    handleFightActions(
+        actionContainer,
+        instructionContainer,
+        attackButton,
+        defendButton,
+        currentPlayer,
+        playersInstances
+    )
 })

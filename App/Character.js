@@ -12,6 +12,7 @@ export default class Character {
         this.frameIndex = 1
         this.global = global
 
+        this.isDefending = false
         this.isMoving = false
         this.formatFrames()
     }
