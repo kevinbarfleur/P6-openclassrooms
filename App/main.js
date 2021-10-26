@@ -206,29 +206,36 @@ function drawHearts(life) {
 function printInfo(container, playersInstances) {
     container.innerHTML = ''
 
-    const template = (player, classe, life, weapon, dmg) => `
+    const template = (player, playerClass, classe, life, weapon, dmg) => `
         <div class="player-info">
-            <h3>Player ${player} </h3>
-            <p>Class : ${classe} </p>
-            <div class="life">
-                <p class="life-label">Life:  ${life} HP </p>
+            <div class='player-label'>
+                <div class='player-label-bullet ${playerClass}'></div>Player ${player} - <span> ${classe} </span>
             </div>
-            <p>Weapon: ${weapon} </p>
-            <p>Dammages:  ${dmg}</p>
+            <div class="life-container">
+                <div class="life-bar">
+                    <div class="life-value" style="width:${life}%;">
+                </div>
+                </div><span>${life}hp</span>
+            </div>
+            <div class='weapon-label'>
+               <span style='text-transform: capitalize;
+               '>${weapon}</span> - <span> ${dmg} damages </span>
+            </div>
         </div>
     `
 
     for (let player of playersInstances) {
+        const playerClass = player.player === 1 ? 'player-one' : 'player-two'
+
         container.innerHTML += template(
             player.player,
+            playerClass,
             player.classe,
             player.hp,
             player.weapon,
             player.dmg
         )
     }
-
-    // console.log(playersInstances[0].hp, playersInstances[1].hp)
 }
 
 function printInstructions() {

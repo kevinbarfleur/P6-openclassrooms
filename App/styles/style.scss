@@ -68,13 +68,23 @@ $shadow-color: #4d88b7;
             top: 10px;
             left: 50%;
             transform: translate(-50%);
+            padding: 8px 16px;
+            background-color: #6e5650;
+            border: 2px solid black;
+            border-radius: 6px;
+            box-shadow: black 0.1em 0.1em 0.2em;
+            font-family: 'Blocky';
+            font-size: 1.2em;
+            color: white;
 
-            .red {
-                color: red;
-            }
+            .id {
+                .red {
+                    color: red;
+                }
 
-            .blue {
-                color: blue;
+                .blue {
+                    color: blue;
+                }
             }
         }
 
@@ -131,30 +141,23 @@ $shadow-color: #4d88b7;
             &.left {
                 transform: translateX(0);
                 transition: 0.5s;
-
-                button {
-                    border: 1px solid red;
-                }
             }
             &.right {
                 transform: translateX(100%);
                 margin-left: 6px;
                 transition: 0.5s;
-
-                button {
-                    border: 1px solid blue;
-                }
             }
 
             button {
                 width: 48%;
                 font-family: 'Blocky';
-                font-size: 1em;
+                font-size: 1.2em;
                 color: white;
                 padding: 12px;
                 text-shadow: black 0.1em 0.1em 0.2em;
                 background-color: #6e5650;
-                border: black;
+                border: 2px solid black;
+                border-radius: 6px;
                 box-shadow: black 0.1em 0.1em 0.2em;
             }
         }
@@ -181,17 +184,56 @@ $shadow-color: #4d88b7;
             color: white;
             padding: 12px;
             border: 2px solid green;
-            width: 44%;
+            width: 43%;
             text-shadow: black 0.1em 0.1em 0.2em;
             background-color: #6e5650;
             border: black;
             box-shadow: black 0.1em 0.1em 0.2em;
+            border: 2px solid black;
+            border-radius: 6px;
 
-            .life {
+            .player-label {
+                display: flex;
+                justify-content: flex-start;
+                align-items: center;
+                font-size: 1.2em;
+
+                .player-label-bullet {
+                    width: 10px;
+                    height: 10px;
+                    border-radius: 100%;
+                    border: 2px solid rgba(0, 0, 0, 0.8);
+                    margin-right: 10px;
+
+                    &.player-one {
+                        background-color: red;
+                    }
+                    &.player-two {
+                        background-color: blue;
+                    }
+                }
+            }
+
+            .life-container {
                 display: flex;
                 flex-direction: row;
                 justify-content: flex-start;
                 align-items: center;
+                margin: 6px 0;
+                margin-left: -2px;
+
+                .life-bar {
+                    border-radius: 4px;
+                    margin-right: 10px;
+                    height: 10px;
+                    width: 70%;
+                    border: 2px solid black;
+
+                    .life-value {
+                        height: 100%;
+                        background-color: rgb(229, 57, 53);
+                    }
+                }
 
                 .life-label {
                     margin-right: 3px;
@@ -204,6 +246,40 @@ $shadow-color: #4d88b7;
                 z-index: 9;
                 border: 1px solid red;
             }
+        }
+    }
+
+    .end-game-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        right: 0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        background-color: rgba(0, 0, 0, 0.5);
+        display: none;
+
+        &.visible {
+            display: flex;
+        }
+
+        .end-game {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            width: 400px;
+            border: 2px solid white;
+            box-shadow: 2px 2px 12px rgba(0, 0, 0, 0.5);
+            background-color: rgba(0, 0, 0, 1);
+            height: 250px;
+
+            color: white;
+            font-family: 'Blocky';
+            font-size: 1.5em;
         }
     }
 }

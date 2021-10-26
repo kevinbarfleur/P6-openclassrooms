@@ -5,9 +5,10 @@ function printInstructions(
 ) {
     if (!isFinish.value) {
         const currentClass = currentPlayer === 1 ? 'red' : 'blue'
+        const playerClass = currentPlayer === 1 ? 'player-one' : 'player-two'
         const instructionTemplate = () => `
             <div class="${currentClass}">
-                Player <span>${currentPlayer}</span>
+                Player <span>${currentPlayer}</span><span class='player-bullet ${playerClass}'><span> turn
             </div>
         `
 
@@ -91,5 +92,16 @@ function defendAction(playersInstances, currentPlayer) {
 }
 
 function endGame(initiator, target) {
-    console.log(`Player ${initiator.player} win !`)
+    target.hp = 0
+    const endOverlay = document.querySelector('.end-game-overlay')
+    const endContainer = document.querySelector('.end-game')
+    endContainer.innerHTML = `
+        Player ${initiator.player} win !
+        <button class='reset-button'>Play again</button>
+    `
+    const resetButton = document.querySelector('.reset-button')
+    resetButton.addEventListener('click', () => {
+        window.location.reload()
+    })
+    endOverlay.classList.add('visible')
 }
