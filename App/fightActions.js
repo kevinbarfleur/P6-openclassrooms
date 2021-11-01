@@ -97,7 +97,13 @@ function endGame(initiator, target) {
     const endContainer = document.querySelector('.end-game')
     endContainer.innerHTML = `
         Player ${initiator.player} win !
-        <button class='reset-button'>Play again</button>
+        <button class="reset-button">
+            <span class="shadow"></span>
+            <span class="edge"></span>
+            <span class="front">
+                Play again !
+            </span>
+        </button>
     `
     const resetButton = document.querySelector('.reset-button')
     resetButton.addEventListener('click', () => {

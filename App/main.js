@@ -385,7 +385,6 @@ loadImage(tileset).then((image) => {
     for (let player of playersInstances) {
         player.setGlobal(getGlobal())
         player.placeCharacter()
-        console.log(player)
     }
 
     for (let weapon of weaponsInstances) {
