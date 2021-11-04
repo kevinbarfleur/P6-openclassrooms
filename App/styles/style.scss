@@ -11,6 +11,18 @@ $shadow-color: #4d88b7;
     font-weight: bold;
 }
 
+@font-face {
+    font-family: Chubby Choo;
+    src: url('../assets/ChubbyChoo-Regular.ttf');
+    font-weight: 400;
+}
+
+@font-face {
+    font-family: Chubby Choo;
+    src: url('../assets/ChubbyChoo-semiBold.ttf');
+    font-weight: bold;
+}
+
 * {
     --heartColor: #f22613;
     --titleBorder: white;
@@ -26,7 +38,22 @@ $shadow-color: #4d88b7;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    background-color: #222222;
+    background-color: #483b3a;
+    background-image: url("data:image/svg+xml,<svg id='patternId' width='100%' height='100%' xmlns='http://www.w3.org/2000/svg'><defs><pattern id='a' patternUnits='userSpaceOnUse' width='60' height='30' patternTransform='scale(2) rotate(0)'><rect x='0' y='0' width='100%' height='100%' fill='hsla(4, 5%, 12%, 1)'/><path d='M1-6.5v13h28v-13H1zm15 15v13h28v-13H16zm-15 15v13h28v-13H1z'  stroke-width='1' stroke='none' fill='hsla(4, 8%, 15%, 1)'/><path d='M31-6.5v13h28v-13H31zm-45 15v13h28v-13h-28zm60 0v13h28v-13H46zm-15 15v13h28v-13H31z'  stroke-width='1' stroke='none' fill='hsla(4, 6%, 14%, 1)'/></pattern></defs><rect width='800%' height='800%' transform='translate(0,0)' fill='url(%23a)'/></svg>");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    font-family: Chubby Choo;
+    font-size: 13px;
+    line-height: 22px;
+
+    .main-container {
+        background-color: hsl(0, 0%, 0%);
+        padding: 24px 22px;
+        border-radius: 12px;
+        border: 3px solid hsl(8, 69%, 54%);
+        box-shadow: black 0.2em 0.1em 0.5em;
+    }
 
     canvas {
         image-rendering: pixelated;
@@ -68,22 +95,21 @@ $shadow-color: #4d88b7;
             top: 10px;
             left: 50%;
             transform: translate(-50%);
-            padding: 8px 16px;
+            padding: 2px 16px 8px 16px;
             background-color: #6e5650;
             border: 2px solid black;
             border-radius: 12px;
             box-shadow: black 0.1em 0.1em 0.2em;
-            font-family: 'Blocky';
             font-size: 1.2em;
             color: white;
 
             .id {
                 .red {
-                    color: red;
+                    color: hsl(8, 69%, 54%);
                 }
 
                 .blue {
-                    color: blue;
+                    color: hsl(206deg, 54%, 57%);
                 }
             }
         }
@@ -93,6 +119,9 @@ $shadow-color: #4d88b7;
             flex-direction: row;
             width: 416px;
             height: 216px;
+            margin-top: 1.8rem;
+            border-radius: 12px;
+            background-color: hsla(4, 8%, 15%, 1);
 
             .right {
                 display: flex;
@@ -101,14 +130,13 @@ $shadow-color: #4d88b7;
                 align-items: flex-end;
                 width: 50%;
                 height: 100%;
-                border: 1px solid grey;
 
                 .player-container {
                     margin-top: 120px;
                     margin-right: 70px;
                     width: 30px;
                     height: 30px;
-                    background-color: hsl(211deg, 100%, 50%);
+                    background-color: hsl(206deg, 54%, 57%);
                 }
             }
 
@@ -119,14 +147,13 @@ $shadow-color: #4d88b7;
                 align-items: flex-start;
                 width: 50%;
                 height: 100%;
-                border: 1px solid grey;
 
                 .player-container {
                     margin-top: 120px;
                     margin-left: 70px;
                     width: 30px;
                     height: 30px;
-                    background-color: hsl(345deg 100% 47%);
+                    background-color: hsl(8, 69%, 54%);
                 }
             }
         }
@@ -157,6 +184,7 @@ $shadow-color: #4d88b7;
                         height: 150%;
                         margin-bottom: -30%;
                         fill: rgba(255, 255, 255, 1);
+                        transform: scale(1.15);
                     }
 
                     .shadow {
@@ -168,7 +196,7 @@ $shadow-color: #4d88b7;
                         border-radius: 12px;
                         background: hsl(0deg 0% 0% / 0.25);
                         will-change: transform;
-                        transform: translateY(2px);
+                        transform: translateY(2px) translateX(1px);
                         transition: transform 600ms
                             cubic-bezier(0.3, 0.7, 0.4, 1);
                     }
@@ -181,10 +209,10 @@ $shadow-color: #4d88b7;
                         border-radius: 12px;
                         background: linear-gradient(
                             to left,
-                            hsl(340deg 100% 16%) 0%,
-                            hsl(340deg 100% 32%) 8%,
-                            hsl(340deg 100% 32%) 92%,
-                            hsl(340deg 100% 16%) 100%
+                            hsl(8, 69%, 24%) 0%,
+                            hsl(8, 69%, 54%) 8%,
+                            hsl(8, 69%, 54%) 92%,
+                            hsl(8, 69%, 24%) 100%
                         );
                         border: 1px solid black;
                     }
@@ -198,9 +226,9 @@ $shadow-color: #4d88b7;
                         border-radius: 12px;
                         font-size: 1.25rem;
                         color: white;
-                        background: hsl(345deg 100% 47%);
+                        background: hsl(8, 69%, 54%);
                         will-change: transform;
-                        transform: translateY(-4px);
+                        transform: translateY(-4px) translateX(1px);
                         transition: transform 600ms
                             cubic-bezier(0.3, 0.7, 0.4, 1);
                         border: 3px solid black;
@@ -209,21 +237,21 @@ $shadow-color: #4d88b7;
                         filter: brightness(110%);
                     }
                     &:hover .front {
-                        transform: translateY(-6px);
+                        transform: translateY(-6px) translateX(1px);
                         transition: transform 250ms
                             cubic-bezier(0.3, 0.7, 0.4, 1.5);
                     }
                     &:active .front {
-                        transform: translateY(-2px);
+                        transform: translateY(-2px) translateX(1px);
                         transition: transform 34ms;
                     }
                     &:hover .shadow {
-                        transform: translateY(4px);
+                        transform: translateY(4px) translateX(1px);
                         transition: transform 250ms
                             cubic-bezier(0.3, 0.7, 0.4, 1.5);
                     }
                     &:active .shadow {
-                        transform: translateY(1px);
+                        transform: translateY(1px) translateX(1px);
                         transition: transform 34ms;
                     }
                     &:focus:not(:focus-visible) {
@@ -251,7 +279,7 @@ $shadow-color: #4d88b7;
                         height: 150%;
                         margin-bottom: -30%;
                         fill: rgba(255, 255, 255, 1);
-                        transform: scale(2);
+                        transform: scale(1.15);
                     }
 
                     .shadow {
@@ -263,7 +291,7 @@ $shadow-color: #4d88b7;
                         border-radius: 12px;
                         background: hsl(0deg 0% 0% / 0.25);
                         will-change: transform;
-                        transform: translateY(2px);
+                        transform: translateY(2px) translateX(1px);
                         transition: transform 600ms
                             cubic-bezier(0.3, 0.7, 0.4, 1);
                     }
@@ -276,10 +304,10 @@ $shadow-color: #4d88b7;
                         border-radius: 12px;
                         background: linear-gradient(
                             to left,
-                            hsl(210deg 100% 16%) 0%,
-                            hsl(210deg 100% 32%) 8%,
-                            hsl(210deg 100% 32%) 92%,
-                            hsl(210deg 100% 16%) 100%
+                            hsl(206deg, 54%, 27%) 0%,
+                            hsl(206deg, 54%, 57%) 8%,
+                            hsl(206deg, 54%, 57%) 92%,
+                            hsl(206deg, 54%, 27%) 100%
                         );
                         border: 1px solid black;
                     }
@@ -293,9 +321,9 @@ $shadow-color: #4d88b7;
                         border-radius: 12px;
                         font-size: 1.25rem;
                         color: white;
-                        background: hsl(215deg 100% 47%);
+                        background: hsl(206deg, 54%, 57%);
                         will-change: transform;
-                        transform: translateY(-4px);
+                        transform: translateY(-4px) translateX(1px);
                         transition: transform 600ms
                             cubic-bezier(0.3, 0.7, 0.4, 1);
                         border: 3px solid black;
@@ -304,21 +332,21 @@ $shadow-color: #4d88b7;
                         filter: brightness(110%);
                     }
                     &:hover .front {
-                        transform: translateY(-6px);
+                        transform: translateY(-6px) translateX(1px);
                         transition: transform 250ms
                             cubic-bezier(0.3, 0.7, 0.4, 1.5);
                     }
                     &:active .front {
-                        transform: translateY(-2px);
+                        transform: translateY(-2px) translateX(1px);
                         transition: transform 34ms;
                     }
                     &:hover .shadow {
-                        transform: translateY(4px);
+                        transform: translateY(4px) translateX(1px);
                         transition: transform 250ms
                             cubic-bezier(0.3, 0.7, 0.4, 1.5);
                     }
                     &:active .shadow {
-                        transform: translateY(1px);
+                        transform: translateY(1px) translateX(1px);
                         transition: transform 34ms;
                     }
                     &:focus:not(:focus-visible) {
@@ -330,9 +358,14 @@ $shadow-color: #4d88b7;
     }
 
     .title {
-        font-family: 'Blocky';
-        font-size: 3em;
-        color: white;
+        width: 100%;
+        text-align: center;
+        font-family: 'Chubby Choo';
+        font-weight: bold;
+        font-size: 3.6rem;
+        text-shadow: 5px 5px 4px hsl(0, 0%, 0%);
+        color: hsl(53, 99%, 55%);
+        margin-bottom: 1rem;
     }
 
     .panel-info {
@@ -345,11 +378,10 @@ $shadow-color: #4d88b7;
         justify-content: space-between;
 
         .player-info {
-            font-family: 'Blocky';
             font-size: 1.2em;
             color: white;
-            padding: 12px;
-            width: 43%;
+            padding: 8px;
+            width: 45%;
             text-shadow: black 0.1em 0.1em 0.2em;
             background-color: hsl(12deg, 16%, 37%);
             box-shadow: black 0.1em 0.1em 0.2em;
@@ -359,7 +391,7 @@ $shadow-color: #4d88b7;
             .player-label {
                 display: flex;
                 justify-content: flex-start;
-                align-items: center;
+                align-items: flex-end;
                 font-size: 1.2em;
 
                 .player-label-bullet {
@@ -370,11 +402,21 @@ $shadow-color: #4d88b7;
                     margin-right: 10px;
 
                     &.player-one {
-                        background-color: hsl(345deg 100% 47%);
+                        background-color: hsl(8, 69%, 54%);
                     }
                     &.player-two {
-                        background-color: hsl(210deg, 100%, 50%);
+                        background-color: hsl(206, 54%, 57%);
                     }
+                }
+
+                .class-name {
+                    width: fit-content;
+                    padding: 0px 6px 6px 6px;
+                    margin-left: 8px;
+                    border-radius: 8px;
+                    background-color: hsl(0, 0%, 0%);
+                    text-shadow: black 0em 0em 0em;
+                    transform: translateY(6px);
                 }
             }
 
@@ -382,8 +424,8 @@ $shadow-color: #4d88b7;
                 display: flex;
                 flex-direction: row;
                 justify-content: flex-start;
-                align-items: center;
-                margin: 6px 0;
+                align-items: flex-end;
+                margin: 6px 0 10px 0;
                 margin-left: -2px;
 
                 .life-bar {
@@ -396,12 +438,31 @@ $shadow-color: #4d88b7;
                     .life-value {
                         height: 100%;
                         border-radius: 4px;
-                        background-color: hsl(345deg 100% 47%);
+                        background-color: hsl(8, 69%, 54%);
                     }
                 }
 
                 .life-label {
                     margin-right: 3px;
+                }
+            }
+
+            .weapon-label {
+                width: fit-content;
+                padding: 2px 6px 6px 6px;
+                border-radius: 8px;
+                background-color: hsl(0, 0%, 0%);
+                text-shadow: black 0em 0em 0em;
+
+                .weapon-name {
+                    text-transform: capitalize;
+                }
+
+                .value {
+                    color: hsl(0, 0%, 0%);
+                    padding: 0px 4px 4px 4px;
+                    border-radius: 4px;
+                    background-color: hsl(0, 100%, 100%);
                 }
             }
 
@@ -414,6 +475,7 @@ $shadow-color: #4d88b7;
     }
 
     .end-game-overlay {
+        z-index: 2;
         position: absolute;
         top: 0;
         left: 0;
@@ -436,13 +498,13 @@ $shadow-color: #4d88b7;
             align-items: center;
             justify-content: center;
             width: 400px;
-            border: 2px solid white;
+            border: 3px solid white;
+            border-radius: 12px;
             box-shadow: 2px 2px 12px rgba(0, 0, 0, 0.5);
             background-color: rgba(0, 0, 0, 1);
             height: 250px;
 
             color: white;
-            font-family: 'Blocky';
             font-size: 1.5em;
 
             .reset-button {
@@ -473,7 +535,7 @@ $shadow-color: #4d88b7;
                     border-radius: 12px;
                     background: hsl(0deg 0% 0% / 0.25);
                     will-change: transform;
-                    transform: translateY(2px);
+                    transform: translateY(2px) translateX(1px);
                     transition: transform 600ms cubic-bezier(0.3, 0.7, 0.4, 1);
                     border: 3px solid black;
                 }
@@ -494,38 +556,38 @@ $shadow-color: #4d88b7;
                     border: 3px solid black;
                 }
                 .front {
+                    font-family: Chubby Choo;
                     display: flex;
                     flex-direction: column;
                     justify-content: center;
                     align-items: center;
                     position: relative;
-                    padding: 12px 22px;
+                    padding: 4px 12px 12px 12px;
                     border-radius: 12px;
-                    font-family: 'Blocky';
-                    font-size: 2.3em;
+                    font-size: 2em;
                     color: black;
                     background: hsl(215deg 0% 47%);
                     will-change: transform;
-                    transform: translateY(-4px);
+                    transform: translateY(-4px) translateX(1px);
                     transition: transform 600ms cubic-bezier(0.3, 0.7, 0.4, 1);
                 }
                 &:hover {
                     filter: brightness(110%);
                 }
                 &:hover .front {
-                    transform: translateY(-6px);
+                    transform: translateY(-6px) translateX(1px);
                     transition: transform 250ms cubic-bezier(0.3, 0.7, 0.4, 1.5);
                 }
                 &:active .front {
-                    transform: translateY(-2px);
+                    transform: translateY(-2px) translateX(1px);
                     transition: transform 34ms;
                 }
                 &:hover .shadow {
-                    transform: translateY(4px);
+                    transform: translateY(4px) translateX(1px);
                     transition: transform 250ms cubic-bezier(0.3, 0.7, 0.4, 1.5);
                 }
                 &:active .shadow {
-                    transform: translateY(1px);
+                    transform: translateY(1px) translateX(1px);
                     transition: transform 34ms;
                 }
                 &:focus:not(:focus-visible) {

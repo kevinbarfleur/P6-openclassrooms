@@ -209,7 +209,7 @@ function printInfo(container, playersInstances) {
     const template = (player, playerClass, classe, life, weapon, dmg) => `
         <div class="player-info">
             <div class='player-label'>
-                <div class='player-label-bullet ${playerClass}'></div>Player ${player} - <span> ${classe} </span>
+                <div class='player-label-bullet ${playerClass}'></div>Player ${player} <span class="class-name">${classe}</span>
             </div>
             <div class="life-container">
                 <div class="life-bar">
@@ -218,8 +218,7 @@ function printInfo(container, playersInstances) {
                 </div><span>${life}hp</span>
             </div>
             <div class='weapon-label'>
-               <span style='text-transform: capitalize;
-               '>${weapon}</span> - <span> ${dmg} damages </span>
+               <span class='weapon-name'>${weapon}</span> - <span class="value">${dmg}</span> damages
             </div>
         </div>
     `
@@ -379,7 +378,7 @@ loadImage(tileset).then((image) => {
         { name: 'sword', dmg: '30', isHeld: false },
         { name: 'mace', dmg: '20', isHeld: false },
         { name: 'axe', dmg: '40', isHeld: false },
-        { name: 'goldSword', dmg: '50', isHeld: false }
+        { name: 'excalibur', dmg: '50', isHeld: false }
     ])
 
     for (let player of playersInstances) {
