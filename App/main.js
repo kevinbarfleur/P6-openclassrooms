@@ -22,11 +22,13 @@ const boardCanvas = document.getElementById('board')
 const context = boardCanvas.getContext('2d')
 
 export const infoContainer = document.querySelector('.panel-info')
+const mainContainer = document.querySelector('.main-container')
 const fightContainer = document.getElementById('fight')
 const instructionContainer = document.querySelector('.instruction')
 const actionContainer = document.querySelector('.action')
 const attackButton = document.querySelector('.attack')
 const defendButton = document.querySelector('.defend')
+const playersContainers = document.querySelectorAll('.player-container')
 
 const fps = 200
 const playerMoveSpeed = 1.4
@@ -426,11 +428,13 @@ loadImage(tileset).then((image) => {
     // handleGamePhase(true, currentPlayer, fps, sprites)
     initRendering(8, playersInstances, weaponsInstances, context, sprites)
     handleFightActions(
+        mainContainer,
         actionContainer,
         instructionContainer,
         attackButton,
         defendButton,
         currentPlayer,
-        playersInstances
+        playersInstances,
+        playersContainers
     )
 })
