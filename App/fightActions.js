@@ -41,7 +41,6 @@ export function handleFightActions(
     attack.addEventListener('click', () => {
         if (isInAction) return
         isInAction = true
-        console.log(isInAction)
         if (currentPlayer === 1) {
             playersContainers[0].style.animationName = 'attackFromLeft'
             setTimeout(() => {
