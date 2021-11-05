@@ -20,7 +20,6 @@ import heartImage from './assets/heart.png'
 
 const boardCanvas = document.getElementById('board')
 const context = boardCanvas.getContext('2d')
-
 export const infoContainer = document.querySelector('.panel-info')
 const mainContainer = document.querySelector('.main-container')
 const fightContainer = document.getElementById('fight')
@@ -29,23 +28,20 @@ const actionContainer = document.querySelector('.action')
 const attackButton = document.querySelector('.attack')
 const defendButton = document.querySelector('.defend')
 const playersContainers = document.querySelectorAll('.player-container')
-
 const fps = 200
 const playerMoveSpeed = 1.4
 const unit = 32
 let mousePos = { x: 0, y: 0 }
-
 let gamePhase = 'board'
-
 let playersInstances = []
 let weaponsInstances = []
 let currentPlayer = 1
+let isInAction = false
 const pikesDensity = '10%'
 const size = 12
 const board = new Board({ x: size, y: size }, pikesDensity, gamePhase)
 const currentLevel = board.getCurrentLevel()
 const boardDimensions = board.getDimensions()
-
 let fpsInterval, now, then, elapsed, startTime
 resizeCanvas(boardDimensions)
 
@@ -425,7 +421,7 @@ loadImage(tileset).then((image) => {
         }
     })
 
-    // handleGamePhase(true, currentPlayer, fps, sprites)
+    handleGamePhase(true, currentPlayer, fps, sprites)
     initRendering(8, playersInstances, weaponsInstances, context, sprites)
     handleFightActions(
         mainContainer,
@@ -435,6 +431,7 @@ loadImage(tileset).then((image) => {
         defendButton,
         currentPlayer,
         playersInstances,
-        playersContainers
+        playersContainers,
+        isInAction
     )
 })

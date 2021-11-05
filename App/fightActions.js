@@ -33,11 +33,15 @@ export function handleFightActions(
     defend,
     currentPlayer,
     playersInstances,
-    playersContainers
+    playersContainers,
+    isInAction
 ) {
     printInstructions(instructionContainer, currentPlayer)
 
     attack.addEventListener('click', () => {
+        if (isInAction) return
+        isInAction = true
+        console.log(isInAction)
         if (currentPlayer === 1) {
             playersContainers[0].style.animationName = 'attackFromLeft'
             setTimeout(() => {
@@ -50,6 +54,7 @@ export function handleFightActions(
                     playersContainers[1]
                 )
                 currentPlayer = 2
+                isInAction = false
             }, 1000)
         } else if (currentPlayer === 2) {
             playersContainers[1].style.animationName = 'attackFromRight'
@@ -63,13 +68,15 @@ export function handleFightActions(
                     playersContainers[0]
                 )
                 currentPlayer = 1
+                isInAction = false
             }, 1000)
         }
-
         printInstructions(instructionContainer, currentPlayer)
     })
 
     defend.addEventListener('click', () => {
+        if (isInAction) return
+        isInAction = true
         if (currentPlayer === 1) {
             playersContainers[0].style.animationName = 'defend'
             setTimeout(() => {
@@ -77,6 +84,7 @@ export function handleFightActions(
                 playersContainers[0].style.animationName = ''
                 defendAction(playersInstances, currentPlayer)
                 currentPlayer = 2
+                isInAction = false
             }, 1000)
         } else if (currentPlayer === 2) {
             playersContainers[1].style.animationName = 'defendInverted'
@@ -85,9 +93,9 @@ export function handleFightActions(
                 playersContainers[1].style.animationName = ''
                 defendAction(playersInstances, currentPlayer)
                 currentPlayer = 1
+                isInAction = false
             }, 1000)
         }
-
         printInstructions(instructionContainer, currentPlayer)
     })
 }
