@@ -16,8 +16,6 @@ import {
     weapons
 } from './levels/definitions'
 
-import heartImage from './assets/heart.png'
-
 const boardCanvas = document.getElementById('board')
 const context = boardCanvas.getContext('2d')
 export const infoContainer = document.querySelector('.panel-info')
