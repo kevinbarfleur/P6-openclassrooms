@@ -421,7 +421,7 @@ loadImage(tileset).then((image) => {
         }
     })
 
-    handleGamePhase(true, currentPlayer, fps, sprites)
+    // handleGamePhase(true, currentPlayer, fps, sprites)
     initRendering(8, playersInstances, weaponsInstances, context, sprites)
     handleFightActions(
         mainContainer,
