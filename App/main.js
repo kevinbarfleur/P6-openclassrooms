@@ -26,6 +26,8 @@ const actionContainer = document.querySelector('.action')
 const attackButton = document.querySelector('.attack')
 const defendButton = document.querySelector('.defend')
 const playersContainers = document.querySelectorAll('.player-container')
+const initContainer = document.querySelector('.initialization')
+const startGame = document.querySelector('.startGame')
 const fps = 200
 const playerMoveSpeed = 1.4
 const unit = 32
@@ -185,20 +187,6 @@ function handlePlayerMove(char, ite, sprites) {
     }
 }
 
-function drawHearts(life) {
-    let template = ''
-
-    for (let i = 0; i < life; i++) {
-        template += `
-            <div class="heart-container">
-                <img src="${heartImage}"></img>
-            </div>
-        `
-    }
-
-    return template
-}
-
 function printInfo(container, playersInstances) {
     container.innerHTML = ''
 
@@ -233,20 +221,7 @@ function printInfo(container, playersInstances) {
     }
 }
 
-function printInstructions() {
-    if (gamePhase === 'fight') {
-        const currentClass = currentPlayer === 1 ? 'red' : 'blue'
-        const instructionTemplate = () => `
-            <div class="${currentClass}">
-                Player <span>${currentPlayer}</span>
-            </div>
-        `
-
-        instructionContainer.innerHTML = instructionTemplate(currentClass)
-    }
-}
-
-function handleGamePhase(isFighting, fps, sprites) {
+function handleGamePhase(isFighting, fps) {
     if (isFighting) {
         setTimeout(() => {
             gamePhase = 'fight'
@@ -263,34 +238,6 @@ function handleGamePhase(isFighting, fps, sprites) {
         }, fps)
         return
     }
-}
-
-function cloneCanvas(oldCanvas) {
-    //create a new canvas
-    var newCanvas = document.createElement('canvas')
-    var context = newCanvas.getContext('2d')
-
-    //set dimensions
-    newCanvas.width = oldCanvas.width
-    newCanvas.height = oldCanvas.height
-
-    //apply the old canvas to the new one
-    context.drawImage(oldCanvas, 0, 0)
-
-    //return the new canvas
-    return newCanvas
-}
-
-function getSpriteElement(name, sprites) {
-    if (sprites) {
-        const element = Array.from(sprites.tiles).filter(
-            (sprite) => sprite[0] === name
-        )
-
-        return element[0][1]
-    }
-
-    return []
 }
 
 function initRendering(
@@ -330,106 +277,114 @@ function render(characters, weapons, context, sprites) {
 }
 
 loadImage(tileset).then((image) => {
-    const sprites = new SpriteSheet(image, unit, unit, unit)
+    startGame.addEventListener('click', () => {
+        boardCanvas.classList.remove('hidden')
+        initContainer.classList.add('hidden')
 
-    // Define all level tiles
-    for (let tile in tiles) {
-        sprites.define(tile, tiles[tile].x, tiles[tile].y)
-    }
+        const sprites = new SpriteSheet(image, unit, unit, unit)
 
-    // Define all characters sprites
-    for (let char in charactersSprites) {
-        Object.keys(charactersSprites[char]).forEach((frame, index) => {
+        // Define all level tiles
+        for (let tile in tiles) {
+            sprites.define(tile, tiles[tile].x, tiles[tile].y)
+        }
+
+        // Define all characters sprites
+        for (let char in charactersSprites) {
+            Object.keys(charactersSprites[char]).forEach((frame, index) => {
+                sprites.define(
+                    `${char + (index + 1)}`,
+                    charactersSprites[char][frame].x,
+                    charactersSprites[char][frame].y
+                )
+            })
+        }
+
+        for (let tile in moveTileSprites) {
             sprites.define(
-                `${char + (index + 1)}`,
-                charactersSprites[char][frame].x,
-                charactersSprites[char][frame].y
+                tile,
+                moveTileSprites[tile].x,
+                moveTileSprites[tile].y
             )
-        })
-    }
-
-    for (let tile in moveTileSprites) {
-        sprites.define(tile, moveTileSprites[tile].x, moveTileSprites[tile].y)
-    }
-
-    for (let deco in decorations) {
-        sprites.define(deco, decorations[deco].x, decorations[deco].y)
-    }
-
-    for (let weapon in weapons) {
-        sprites.define(weapon, weapons[weapon].x, weapons[weapon].y)
-    }
-
-    playersInstances = initPlayers(
-        [
-            { classe: 'elf', weapon: 'knife' },
-            { classe: 'wizard', weapon: 'staff' }
-        ],
-        sprites
-    )
-
-    weaponsInstances = initWeapons([
-        { name: 'staff', dmg: '10', isHeld: true },
-        { name: 'knife', dmg: '10', isHeld: true },
-        { name: 'sword', dmg: '30', isHeld: false },
-        { name: 'mace', dmg: '20', isHeld: false },
-        { name: 'axe', dmg: '40', isHeld: false },
-        { name: 'excalibur', dmg: '50', isHeld: false }
-    ])
-
-    for (let player of playersInstances) {
-        player.setGlobal(getGlobal())
-        player.placeCharacter()
-    }
-
-    for (let weapon of weaponsInstances) {
-        weapon.setGlobal(getGlobal())
-        weapon.placeWeapon()
-    }
-
-    boardCanvas.addEventListener('mousemove', (e) => {
-        const rect = boardCanvas.getBoundingClientRect()
-        mousePos = {
-            x: e.clientX - rect.left,
-            y: e.clientY - rect.top
         }
 
-        for (let char of playersInstances) {
-            char.setMousePos(mousePos)
-        }
-    })
-
-    boardCanvas.addEventListener('click', (e) => {
-        const rect = boardCanvas.getBoundingClientRect()
-        mousePos = {
-            x: e.clientX - rect.left,
-            y: e.clientY - rect.top
+        for (let deco in decorations) {
+            sprites.define(deco, decorations[deco].x, decorations[deco].y)
         }
 
-        for (let char of playersInstances) {
-            if (char) {
+        for (let weapon in weapons) {
+            sprites.define(weapon, weapons[weapon].x, weapons[weapon].y)
+        }
+
+        playersInstances = initPlayers(
+            [
+                { classe: 'elf', weapon: 'knife' },
+                { classe: 'monster', weapon: 'staff' }
+            ],
+            sprites
+        )
+
+        weaponsInstances = initWeapons([
+            { name: 'staff', dmg: '10', isHeld: true },
+            { name: 'knife', dmg: '10', isHeld: true },
+            { name: 'sword', dmg: '30', isHeld: false },
+            { name: 'mace', dmg: '20', isHeld: false },
+            { name: 'axe', dmg: '40', isHeld: false },
+            { name: 'excalibur', dmg: '50', isHeld: false }
+        ])
+
+        for (let player of playersInstances) {
+            player.setGlobal(getGlobal())
+            player.placeCharacter()
+        }
+
+        for (let weapon of weaponsInstances) {
+            weapon.setGlobal(getGlobal())
+            weapon.placeWeapon()
+        }
+
+        boardCanvas.addEventListener('mousemove', (e) => {
+            const rect = boardCanvas.getBoundingClientRect()
+            mousePos = {
+                x: e.clientX - rect.left,
+                y: e.clientY - rect.top
+            }
+
+            for (let char of playersInstances) {
                 char.setMousePos(mousePos)
-                for (let option in char.getMoveOptions()) {
-                    let ite = char.getMoveOptions()[option]
-                    if (char.getClicked(ite.x, ite.y)) {
-                        handlePlayerMove(char, ite, sprites)
+            }
+        })
+
+        boardCanvas.addEventListener('click', (e) => {
+            const rect = boardCanvas.getBoundingClientRect()
+            mousePos = {
+                x: e.clientX - rect.left,
+                y: e.clientY - rect.top
+            }
+
+            for (let char of playersInstances) {
+                if (char) {
+                    char.setMousePos(mousePos)
+                    for (let option in char.getMoveOptions()) {
+                        let ite = char.getMoveOptions()[option]
+                        if (char.getClicked(ite.x, ite.y)) {
+                            handlePlayerMove(char, ite, sprites)
+                        }
                     }
                 }
             }
-        }
-    })
+        })
 
-    // handleGamePhase(true, currentPlayer, fps, sprites)
-    initRendering(8, playersInstances, weaponsInstances, context, sprites)
-    handleFightActions(
-        mainContainer,
-        actionContainer,
-        instructionContainer,
-        attackButton,
-        defendButton,
-        currentPlayer,
-        playersInstances,
-        playersContainers,
-        isInAction
-    )
+        initRendering(8, playersInstances, weaponsInstances, context, sprites)
+        handleFightActions(
+            mainContainer,
+            actionContainer,
+            instructionContainer,
+            attackButton,
+            defendButton,
+            currentPlayer,
+            playersInstances,
+            playersContainers,
+            isInAction
+        )
+    })
 })

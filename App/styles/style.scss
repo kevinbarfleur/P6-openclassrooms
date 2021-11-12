@@ -67,6 +67,20 @@ $shadow-color: #4d88b7;
         image-rendering: pixelated;
     }
 
+    .initialization {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        width: 100%;
+        height: 92%;
+        // border: 5px solid green;
+
+        &.hidden {
+            display: none;
+        }
+    }
+
     #board {
         display: none;
         opacity: 1;

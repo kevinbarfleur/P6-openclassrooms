@@ -43,34 +43,27 @@ export function handleFightActions(
         isInAction = true
         if (currentPlayer === 1) {
             playersContainers[0].style.animationName = 'attackFromLeft'
+            attackAction(playersInstances, currentPlayer, playersContainers[1])
+            printInstructions(instructionContainer, currentPlayer)
+            currentPlayer = 2
             setTimeout(() => {
                 mainContainer.classList = 'main-container blue'
                 acitonsContainer.classList = 'action right'
                 playersContainers[0].style.animationName = ''
-                attackAction(
-                    playersInstances,
-                    currentPlayer,
-                    playersContainers[1]
-                )
-                currentPlayer = 2
                 isInAction = false
             }, 1000)
         } else if (currentPlayer === 2) {
             playersContainers[1].style.animationName = 'attackFromRight'
+            attackAction(playersInstances, currentPlayer, playersContainers[0])
+            printInstructions(instructionContainer, currentPlayer)
+            currentPlayer = 1
             setTimeout(() => {
                 mainContainer.classList = 'main-container red'
                 acitonsContainer.classList = 'action left'
                 playersContainers[1].style.animationName = ''
-                attackAction(
-                    playersInstances,
-                    currentPlayer,
-                    playersContainers[0]
-                )
-                currentPlayer = 1
                 isInAction = false
             }, 1000)
         }
-        printInstructions(instructionContainer, currentPlayer)
     })
 
     defend.addEventListener('click', () => {

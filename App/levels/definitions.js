@@ -221,19 +221,19 @@ export const weapons = {
 }
 
 export const moveTileSprites = {
-    playerOneInitial: {
+    playerTwoInitial: {
         x: 1,
         y: 12
     },
-    playerOneHover: {
+    playerTwoHover: {
         x: 2,
         y: 12
     },
-    playerTwoInitial: {
+    playerOneInitial: {
         x: 3,
         y: 12
     },
-    playerTwoHover: {
+    playerOneHover: {
         x: 4,
         y: 12
     }
@@ -253,22 +253,6 @@ export const charactersSprites = {
             x: 10,
             y: 1
         }
-        // frame4: {
-        //     x: 11,
-        //     y: 1
-        // },
-        // frame5: {
-        //     x: 12,
-        //     y: 1
-        // },
-        // frame6: {
-        //     x: 13,
-        //     y: 1
-        // },
-        // frame7: {
-        //     x: 14,
-        //     y: 1
-        // }
     },
     wizard: {
         frame1: {
@@ -283,21 +267,33 @@ export const charactersSprites = {
             x: 10,
             y: 11
         }
-        // frame4: {
-        //     x: 11,
-        //     y: 11
-        // },
-        // frame5: {
-        //     x: 12,
-        //     y: 11
-        // },
-        // frame6: {
-        //     x: 13,
-        //     y: 11
-        // },
-        // frame7: {
-        //     x: 14,
-        //     y: 11
-        // }
+    },
+    warrior: {
+        frame1: {
+            x: 8,
+            y: 5
+        },
+        frame2: {
+            x: 9,
+            y: 5
+        },
+        frame3: {
+            x: 10,
+            y: 5
+        }
+    },
+    monster: {
+        frame1: {
+            x: 8,
+            y: 13
+        },
+        frame2: {
+            x: 9,
+            y: 13
+        },
+        frame3: {
+            x: 10,
+            y: 13
+        }
     }
 }

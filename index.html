@@ -17,7 +17,23 @@
         <div id="app">
             <div class="main-container red">
                 <div class="title">16Bits Heroes</div>
-                <canvas id="board" class="active"></canvas>
+                <div class="initialization">
+                    <!-- TODO deux steps ! -->
+                    <select name="" id="">
+                        <option value="elf">Elf</option>
+                        <option value="wizard">Wizard</option>
+                        <option value="warrior">Warrior</option>
+                        <option value="monster">Monster</option>
+                    </select>
+                    <select name="" id="">
+                        <option value="elf">Elf</option>
+                        <option value="wizard">Wizard</option>
+                        <option value="warrior">Warrior</option>
+                        <option value="monster">Monster</option>
+                    </select>
+                    <button class="startGame">Go!</button>
+                </div>
+                <canvas id="board" class="active hidden"></canvas>
                 <div id="fight">
                     <div class="instruction"></div>
                     <div class="fight-area">
@@ -107,7 +123,7 @@
                 <div class="end-game-overlay">
                     <div class="end-game"></div>
                 </div>
-                <div class="panel-info"></div>
+                <div class="panel-info hidden"></div>
             </div>
         </div>
         <script type="module" src="/App/main.js"></script>
