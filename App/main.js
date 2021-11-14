@@ -303,8 +303,8 @@ function render(characters, weapons, context, sprites) {
 
 loadImage(tileset).then((image) => {
     startGame.addEventListener('click', () => {
-        console.log(playersConfig)
         boardCanvas.classList.remove('hidden')
+        boardCanvas.classList.remove('opacity0')
         initContainer.classList.add('hidden')
 
         const sprites = new SpriteSheet(image, unit, unit, unit)
