@@ -22,7 +22,27 @@
                         alt="Game title: 16Bits Heroes"
                     />
                 </div>
-                <div class="initialization">
+                <div class="intro">
+                    <div class="intro__text">
+                        <p>Welcome to 16Bits heroes!</p>
+                        <br />
+                        <p>
+                            This is a turn-based game in which you must fight in
+                            1 vs 1.
+                        </p>
+                        <br />
+                        <p>
+                            Catch the best weapon on the battlefield before
+                            jumping into close combat with your enemy!
+                        </p>
+                    </div>
+                    <button class="intro-button clickSound">
+                        <span class="shadow"></span>
+                        <span class="edge"></span>
+                        <span class="front"> Let's go! </span>
+                    </button>
+                </div>
+                <div class="initialization opacity0 hidden">
                     <div class="step step1">
                         <div class="choice-instruction"></div>
 
@@ -39,7 +59,7 @@
                         <span class="front"> Go! </span>
                     </button>
                 </div>
-                <canvas id="board" class="active hidden opacity0"></canvas>
+                <canvas id="board" class="hidden opacity0"></canvas>
                 <div id="fight">
                     <div class="instruction"></div>
                     <div class="fight-area">
@@ -126,6 +146,7 @@
                         </button>
                     </div>
                 </div>
+                <div class="panel-info hidden"></div>
                 <div class="end-game-overlay">
                     <div class="end-game">
                         <div class="winner"></div>

@@ -67,6 +67,32 @@ $shadow-color: #4d88b7;
         image-rendering: pixelated;
     }
 
+    .intro {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        margin: 12%0px 0px 0px;
+        max-width: 416px;
+        padding-left: 1%;
+        padding-right: 1%;
+        color: white;
+        transition: 0.4s;
+        opacity: 1;
+        font-size: 1.5em;
+        color: white;
+
+        &__text {
+            margin-bottom: 32px;
+        }
+
+        &.hidden {
+            opacity: 0;
+            transition: 0.4s;
+        }
+    }
+
     .initialization {
         display: flex;
         flex-direction: column;
@@ -88,6 +114,7 @@ $shadow-color: #4d88b7;
         }
 
         .step {
+            margin: 12% 0px;
             display: flex;
             flex-direction: column;
             justify-content: space-around;
@@ -95,6 +122,7 @@ $shadow-color: #4d88b7;
             height: 25%;
             .choice-instruction {
                 font-size: 1.5em;
+                margin-bottom: 32px;
 
                 .player-id {
                     background-color: white;
@@ -652,6 +680,7 @@ $shadow-color: #4d88b7;
     }
 }
 
+.intro-button,
 .reset-button,
 .startGame,
 .nextStep {

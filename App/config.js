@@ -6,7 +6,8 @@ export const handleCharactersChoice = (
     step,
     playersConfig,
     nextStep,
-    startGame
+    startGame,
+    boardCanvas
 ) => {
     if (step === 1) {
         handleTemplate(step, classes, playersConfig, nextStep, startGame)

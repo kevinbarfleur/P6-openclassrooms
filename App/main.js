@@ -37,10 +37,6 @@ import clickSoundURL from './assets/musics/clickSound.wav'
 const clickSound = new Audio(clickSoundURL)
 const allButtons = document.querySelectorAll('.clickSound')
 document.addEventListener('DOMContentLoaded', () => {
-    boardMusic.loop = true
-    boardMusic.volume = 0.6
-    boardMusic.play()
-
     allButtons.forEach((item) => {
         item.addEventListener('click', () => {
             clickSound.play()
@@ -87,6 +83,23 @@ const boardDimensions = board.getDimensions()
 let fpsInterval, now, then, elapsed, startTime
 resizeCanvas(boardDimensions)
 
+// Handle intro for start music
+const introButton = document.querySelector('.intro-button')
+const introContainer = document.querySelector('.intro')
+introButton.addEventListener('click', () => {
+    introContainer.classList.add('hidden')
+    setTimeout(() => {
+        introContainer.style.display = 'none'
+        initContainer.classList.remove('hidden')
+        setTimeout(() => {
+            initContainer.classList.remove('opacity0')
+        }, 1)
+        boardMusic.loop = true
+        boardMusic.volume = 0.6
+        boardMusic.play()
+    }, 450)
+})
+
 //Handle game init (Choose characters)
 handleCharactersChoice(characterChoiceStep, playersConfig, nextStep, startGame)
 nextStep.addEventListener('click', () => {
@@ -95,7 +108,8 @@ nextStep.addEventListener('click', () => {
         characterChoiceStep,
         playersConfig,
         nextStep,
-        startGame
+        startGame,
+        boardCanvas
     )
 })
 
@@ -339,9 +353,12 @@ function render(characters, weapons, context, sprites) {
 
 loadImage(tileset).then((image) => {
     startGame.addEventListener('click', () => {
+        boardCanvas.classList.add('active')
         boardCanvas.classList.remove('hidden')
-        boardCanvas.classList.remove('opacity0')
         initContainer.classList.add('hidden')
+        setTimeout(() => {
+            boardCanvas.classList.remove('opacity0')
+        }, 100)
 
         const sprites = new SpriteSheet(image, unit, unit, unit)
 
