@@ -50,3 +50,17 @@ export function getMoveSteps(player, destinationX, destinationY, global) {
 
     return { steps, direction }
 }
+
+export function decreaseVolume(audio, interval = 50) {
+    let vol = audio.volume
+
+    const fadeout = setInterval(function () {
+        if (vol >= 0.05) {
+            vol -= 0.05
+            audio.volume = vol
+        } else {
+            audio.volume = 0
+            clearInterval(fadeout)
+        }
+    }, interval)
+}

@@ -1,3 +1,5 @@
+import { decreaseVolume } from './utils/utils'
+
 function printInstructions(
     instructionContainer,
     currentPlayer,
@@ -34,7 +36,10 @@ export function handleFightActions(
     currentPlayer,
     playersInstances,
     playersContainers,
-    isInAction
+    isInAction,
+    hitSound,
+    fightMusic,
+    endMusic
 ) {
     printInstructions(instructionContainer, currentPlayer)
 
@@ -43,7 +48,14 @@ export function handleFightActions(
         isInAction = true
         if (currentPlayer === 1) {
             playersContainers[0].style.animationName = 'attackFromLeft'
-            attackAction(playersInstances, currentPlayer, playersContainers[1])
+            attackAction(
+                playersInstances,
+                currentPlayer,
+                playersContainers[1],
+                hitSound,
+                fightMusic,
+                endMusic
+            )
             printInstructions(instructionContainer, currentPlayer)
             currentPlayer = 2
             setTimeout(() => {
@@ -54,7 +66,14 @@ export function handleFightActions(
             }, 1000)
         } else if (currentPlayer === 2) {
             playersContainers[1].style.animationName = 'attackFromRight'
-            attackAction(playersInstances, currentPlayer, playersContainers[0])
+            attackAction(
+                playersInstances,
+                currentPlayer,
+                playersContainers[0],
+                hitSound,
+                fightMusic,
+                endMusic
+            )
             printInstructions(instructionContainer, currentPlayer)
             currentPlayer = 1
             setTimeout(() => {
@@ -92,7 +111,14 @@ export function handleFightActions(
     })
 }
 
-function attackAction(playersInstances, currentPlayer, targetNodeElement) {
+function attackAction(
+    playersInstances,
+    currentPlayer,
+    targetNodeElement,
+    hitSound,
+    fightMusic,
+    endMusic
+) {
     const initiator = playersInstances.find(
         (player) => player.player === currentPlayer
     )
@@ -104,11 +130,16 @@ function attackAction(playersInstances, currentPlayer, targetNodeElement) {
     if (target.isDefending) target.hp -= initiator.dmg / 2
     else target.hp -= initiator.dmg
 
+    // Trigger hit sound
+    hitSound.volume = 0.3
+    hitSound.play()
+
+    // End game if target HP touch 0
     if (target.hp <= 0) {
         target.hp = 0
         targetNodeElement.classList.add('death')
         setTimeout(() => {
-            endGame(initiator, target)
+            endGame(initiator, fightMusic, endMusic)
         }, 1500)
     }
 
@@ -125,22 +156,21 @@ function defendAction(playersInstances, currentPlayer) {
     initiator.isDefending = true
 }
 
-function endGame(initiator, target) {
+function endGame(initiator, fightMusic, endMusic) {
     const endOverlay = document.querySelector('.end-game-overlay')
-    const endContainer = document.querySelector('.end-game')
-    endContainer.innerHTML = `
-        Player ${initiator.player} win !
-        <button class="reset-button">
-            <span class="shadow"></span>
-            <span class="edge"></span>
-            <span class="front">
-                Play again !
-            </span>
-        </button>
-    `
+    const winner = document.querySelector('.winner')
+    winner.innerHTML = `Player ${initiator.player} win !`
+
     const resetButton = document.querySelector('.reset-button')
     resetButton.addEventListener('click', () => {
-        window.location.reload()
+        setTimeout(() => {
+            window.location.reload()
+        }, 400)
     })
     endOverlay.classList.add('visible')
+
+    decreaseVolume(fightMusic)
+    endMusic.loop = true
+    endMusic.volume = 0.6
+    endMusic.play()
 }

@@ -28,12 +28,12 @@
 
                         <div class="characters-list"></div>
                     </div>
-                    <button class="nextStep" disabled>
+                    <button class="nextStep clickSound" disabled>
                         <span class="shadow"></span>
                         <span class="edge"></span>
                         <span class="front"> Next player </span>
                     </button>
-                    <button class="startGame hidden" disabled>
+                    <button class="startGame hidden clickSound" disabled>
                         <span class="shadow"></span>
                         <span class="edge"></span>
                         <span class="front"> Go! </span>
@@ -62,7 +62,7 @@
                     </div>
 
                     <div class="action left">
-                        <button class="pushable attack">
+                        <button class="pushable attack clickSound">
                             <span class="shadow"></span>
                             <span class="edge"></span>
                             <span class="front">
@@ -94,7 +94,7 @@
                             </span>
                         </button>
 
-                        <button class="pushable defend">
+                        <button class="pushable defend clickSound">
                             <span class="shadow"></span>
                             <span class="edge"></span>
                             <span class="front">
@@ -127,7 +127,14 @@
                     </div>
                 </div>
                 <div class="end-game-overlay">
-                    <div class="end-game"></div>
+                    <div class="end-game">
+                        <div class="winner"></div>
+                        <button class="reset-button clickSound">
+                            <span class="shadow"></span>
+                            <span class="edge"></span>
+                            <span class="front"> Play again ! </span>
+                        </button>
+                    </div>
                 </div>
                 <div class="panel-info hidden"></div>
             </div>

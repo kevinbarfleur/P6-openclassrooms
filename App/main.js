@@ -6,7 +6,7 @@ import Character from './Character'
 import Weapon from './Weapon'
 import Board from './Board'
 import { loadImage } from './utils/loaders'
-import { getSpritesKeys, getMoveSteps } from './utils/utils'
+import { getSpritesKeys, getMoveSteps, decreaseVolume } from './utils/utils'
 import { handleFightActions } from './fightActions'
 import { handleCharactersChoice } from './config'
 import {
@@ -16,6 +16,34 @@ import {
     decorations,
     weapons
 } from './levels/definitions'
+
+// Characters gifs
+import elfGif from './assets/elf_gif.gif'
+import warriorGif from './assets/warrior_gif.gif'
+import wizardGif from './assets/wizard_gif.gif'
+import monsterGif from './assets/monster_gif.gif'
+
+// Init all sounds
+import boardMusicURL from './assets/musics/boardMusic.mp3'
+const boardMusic = new Audio(boardMusicURL)
+boardMusic.loop = true
+boardMusic.volume = 0.6
+boardMusic.play()
+import fightMusicURL from './assets/musics/fightMusic.mp3'
+const fightMusic = new Audio(fightMusicURL)
+fightMusic.volume = 0.6
+import hitSoundURL from './assets/musics/hit.mp3'
+const hitSound = new Audio(hitSoundURL)
+import endMusicURL from './assets/musics/endMusic.mp3'
+const endMusic = new Audio(endMusicURL)
+import clickSoundURL from './assets/musics/clickSound.wav'
+const clickSound = new Audio(clickSoundURL)
+const allButtons = document.querySelectorAll('.clickSound')
+allButtons.forEach((item) => {
+    item.addEventListener('click', () => {
+        clickSound.play()
+    })
+})
 
 const boardCanvas = document.getElementById('board')
 const context = boardCanvas.getContext('2d')
@@ -55,6 +83,8 @@ const currentLevel = board.getCurrentLevel()
 const boardDimensions = board.getDimensions()
 let fpsInterval, now, then, elapsed, startTime
 resizeCanvas(boardDimensions)
+
+//Handle game init (Choose characters)
 handleCharactersChoice(characterChoiceStep, playersConfig, nextStep, startGame)
 nextStep.addEventListener('click', () => {
     characterChoiceStep += 1
@@ -249,8 +279,11 @@ function printInfo(container, playersInstances) {
 function handleGamePhase(isFighting, fps) {
     if (isFighting) {
         setTimeout(() => {
+            decreaseVolume(boardMusic)
             gamePhase = 'fight'
             boardCanvas.classList.add('fade-out')
+            fightMusic.loop = true
+            fightMusic.play()
             setTimeout(() => {
                 boardCanvas.classList.remove('active')
             }, 600)
@@ -355,6 +388,7 @@ loadImage(tileset).then((image) => {
                     return 'knife'
             }
         }
+
         playersInstances = initPlayers(
             [
                 {
@@ -368,6 +402,28 @@ loadImage(tileset).then((image) => {
             ],
             sprites
         )
+
+        const getGif = (character) => {
+            switch (character) {
+                case 'elf':
+                    return elfGif
+                case 'warrior':
+                    return warriorGif
+                case 'wizard':
+                    return wizardGif
+                case 'monster':
+                    return monsterGif
+                default:
+                    return
+            }
+        }
+
+        for (let i = 0; i < playersContainers.length; i++) {
+            playersContainers[i].src = getGif(playersConfig[i + 1].character)
+            playersContainers[i].alt = `${
+                playersConfig[i + 1].character
+            } character gif`
+        }
 
         weaponsInstances = initWeapons([
             { name: 'staff', dmg: '10', isHeld: true },
@@ -430,7 +486,10 @@ loadImage(tileset).then((image) => {
             currentPlayer,
             playersInstances,
             playersContainers,
-            isInAction
+            isInAction,
+            hitSound,
+            fightMusic,
+            endMusic
         )
     })
 })
