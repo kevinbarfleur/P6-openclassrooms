@@ -26,9 +26,6 @@ import monsterGif from './assets/monster_gif.gif'
 // Init all sounds
 import boardMusicURL from './assets/musics/boardMusic.mp3'
 const boardMusic = new Audio(boardMusicURL)
-boardMusic.loop = true
-boardMusic.volume = 0.6
-boardMusic.play()
 import fightMusicURL from './assets/musics/fightMusic.mp3'
 const fightMusic = new Audio(fightMusicURL)
 fightMusic.volume = 0.6
@@ -39,6 +36,11 @@ const endMusic = new Audio(endMusicURL)
 import clickSoundURL from './assets/musics/clickSound.wav'
 const clickSound = new Audio(clickSoundURL)
 const allButtons = document.querySelectorAll('.clickSound')
+document.addEventListener('DOMContentLoaded', () => {
+    boardMusic.loop = true
+    boardMusic.volume = 0.6
+    boardMusic.play()
+})
 allButtons.forEach((item) => {
     item.addEventListener('click', () => {
         clickSound.play()
