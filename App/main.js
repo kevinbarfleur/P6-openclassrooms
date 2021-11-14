@@ -40,10 +40,11 @@ document.addEventListener('DOMContentLoaded', () => {
     boardMusic.loop = true
     boardMusic.volume = 0.6
     boardMusic.play()
-})
-allButtons.forEach((item) => {
-    item.addEventListener('click', () => {
-        clickSound.play()
+
+    allButtons.forEach((item) => {
+        item.addEventListener('click', () => {
+            clickSound.play()
+        })
     })
 })
 
