@@ -16,22 +16,28 @@
     <body>
         <div id="app">
             <div class="main-container red">
-                <div class="title">16Bits Heroes</div>
+                <div class="title">
+                    <img
+                        src="./App/assets/gameTitle.png"
+                        alt="Game title: 16Bits Heroes"
+                    />
+                </div>
                 <div class="initialization">
-                    <!-- TODO deux steps ! -->
-                    <select name="" id="">
-                        <option value="elf">Elf</option>
-                        <option value="wizard">Wizard</option>
-                        <option value="warrior">Warrior</option>
-                        <option value="monster">Monster</option>
-                    </select>
-                    <select name="" id="">
-                        <option value="elf">Elf</option>
-                        <option value="wizard">Wizard</option>
-                        <option value="warrior">Warrior</option>
-                        <option value="monster">Monster</option>
-                    </select>
-                    <button class="startGame">Go!</button>
+                    <div class="step step1">
+                        <div class="choice-instruction"></div>
+
+                        <div class="characters-list"></div>
+                    </div>
+                    <button class="nextStep" disabled>
+                        <span class="shadow"></span>
+                        <span class="edge"></span>
+                        <span class="front"> Next player </span>
+                    </button>
+                    <button class="startGame hidden" disabled>
+                        <span class="shadow"></span>
+                        <span class="edge"></span>
+                        <span class="front"> Go! </span>
+                    </button>
                 </div>
                 <canvas id="board" class="active hidden"></canvas>
                 <div id="fight">

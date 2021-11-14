@@ -8,6 +8,7 @@ import Board from './Board'
 import { loadImage } from './utils/loaders'
 import { getSpritesKeys, getMoveSteps } from './utils/utils'
 import { handleFightActions } from './fightActions'
+import { handleCharactersChoice } from './config'
 import {
     tiles,
     charactersSprites,
@@ -27,6 +28,7 @@ const attackButton = document.querySelector('.attack')
 const defendButton = document.querySelector('.defend')
 const playersContainers = document.querySelectorAll('.player-container')
 const initContainer = document.querySelector('.initialization')
+const nextStep = document.querySelector('.nextStep')
 const startGame = document.querySelector('.startGame')
 const fps = 200
 const playerMoveSpeed = 1.4
@@ -37,6 +39,15 @@ let playersInstances = []
 let weaponsInstances = []
 let currentPlayer = 1
 let isInAction = false
+let characterChoiceStep = 1
+let playersConfig = {
+    1: {
+        character: ''
+    },
+    2: {
+        character: ''
+    }
+}
 const pikesDensity = '10%'
 const size = 12
 const board = new Board({ x: size, y: size }, pikesDensity, gamePhase)
@@ -44,6 +55,16 @@ const currentLevel = board.getCurrentLevel()
 const boardDimensions = board.getDimensions()
 let fpsInterval, now, then, elapsed, startTime
 resizeCanvas(boardDimensions)
+handleCharactersChoice(characterChoiceStep, playersConfig, nextStep, startGame)
+nextStep.addEventListener('click', () => {
+    characterChoiceStep += 1
+    handleCharactersChoice(
+        characterChoiceStep,
+        playersConfig,
+        nextStep,
+        startGame
+    )
+})
 
 export function getGlobal() {
     return {
@@ -167,17 +188,19 @@ function handlePlayerMove(char, ite, sprites) {
                             (weapon) => weapon.weapon === char.weapon
                         )
                         setTimeout(() => {
-                            currentWeapon[0].isHeld = false
-                            currentWeapon[0].setPos({
-                                x: char.getPos().x,
-                                y: char.getPos().y
-                            })
+                            if (currentWeapon[0]) {
+                                currentWeapon[0].isHeld = false
+                                currentWeapon[0].setPos({
+                                    x: char.getPos().x,
+                                    y: char.getPos().y
+                                })
+                            }
                         }, 100)
                     }
 
                     char.weapon = weapon.weapon
                     char.dmg = weapon.dmg
-                    weapon.isHeld = true
+                    if (weapon) weapon.isHeld = true
                 }
             }
 
@@ -202,7 +225,9 @@ function printInfo(container, playersInstances) {
                 </div><span>${life}hp</span>
             </div>
             <div class='weapon-label'>
-               <span class='weapon-name'>${weapon}</span> - <span class="value">${dmg}</span> damages
+               <span class='weapon-name'>${
+                   weapon || 'Claws'
+               }</span> - <span class="value">${dmg}</span> damages
             </div>
         </div>
     `
@@ -278,6 +303,7 @@ function render(characters, weapons, context, sprites) {
 
 loadImage(tileset).then((image) => {
     startGame.addEventListener('click', () => {
+        console.log(playersConfig)
         boardCanvas.classList.remove('hidden')
         initContainer.classList.add('hidden')
 
@@ -315,10 +341,30 @@ loadImage(tileset).then((image) => {
             sprites.define(weapon, weapons[weapon].x, weapons[weapon].y)
         }
 
+        const getStarter = (character) => {
+            switch (character) {
+                case 'elf':
+                    return 'knife'
+                case 'warrior':
+                    return 'knife'
+                case 'wizard':
+                    return 'staff'
+                case 'monster':
+                    return ''
+                default:
+                    return 'knife'
+            }
+        }
         playersInstances = initPlayers(
             [
-                { classe: 'elf', weapon: 'knife' },
-                { classe: 'monster', weapon: 'staff' }
+                {
+                    classe: playersConfig[1].character,
+                    weapon: getStarter(playersConfig[1].character)
+                },
+                {
+                    classe: playersConfig[2].character,
+                    weapon: getStarter(playersConfig[2].character)
+                }
             ],
             sprites
         )
